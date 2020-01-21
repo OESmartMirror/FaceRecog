@@ -1,0 +1,7 @@
+#OpenCV pictures..etc
+dataset/
+dataset_cropped/
+images/
+runs/
+__pycache__/
+path.pyc
