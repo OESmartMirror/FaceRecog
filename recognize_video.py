@@ -1,6 +1,5 @@
 # import the necessary packages
 from imutils.video import VideoStream
-from imutils.video import FPS
 import numpy as np
 import argparse
 import imutils
@@ -8,6 +7,7 @@ import pickle
 import time
 import cv2
 import os
+import eel
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -42,9 +42,11 @@ recognizer = pickle.loads(open(args["recognizer"], "rb").read())
 le = pickle.loads(open(args["le"], "rb").read())
 
 # initialize the video stream, then allow the camera sensor to warm up
-# print("[INFO] starting video stream...")
+
+print("[INFO] starting video stream...")
 vs = VideoStream(src=0).start()
-time.sleep(2.0)
+print("sleeping for a sec[eel]")
+time.sleep(1.0)
 
 
 def Detect_face(frame):
@@ -108,21 +110,30 @@ def add_to_output_buffer(name, proba):
     # print('adding result to output buffer')
     detectionresults.append([name, proba])
 
-
+@eel.expose
 def loop_recog_for(num_of_frames):
-
+    print("looping for " + str(num_of_frames) + "frames")
     for x in range(num_of_frames):
         frame = vs.read()
         Detect_face(frame)
     if len(detectionresults) == 0:
-        print("No user seen")
+        return "No user seen"
     else:
         detectionresults.sort(key=lambda qi: qi[1])
 
-        print(detectionresults[-1], flush=True)
+        print(detectionresults[-1])
+        return str(detectionresults[-1])
 
+#print("preparing for face recog...")
+#Result = loop_recog_for(5)
 
-loop_recog_for(5)
+#print("result= " + Result)
+
+#eel.DisplayUser(Result)
+
+print("starting eel")
+eel.init('web')
+eel.start('main.html')
 
 # do a bit of cleanup
 cv2.destroyAllWindows()

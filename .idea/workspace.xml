@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97faa38d-ba59-4e72-af0b-72404db5021c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/debug.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/main.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recognize_video.py" beforeDir="false" afterPath="$PROJECT_DIR$/recognize_video.py" afterDir="false" />
     </list>
@@ -14,6 +17,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="HTML File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -27,16 +32,22 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1TCGBMjyZcJ3Drk3RO9G1NCMMef" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunManager" selected="Python.recognize_video">
@@ -182,7 +193,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1559727482093</updated>
-      <workItem from="1579682671942" duration="7994000" />
+      <workItem from="1579682671942" duration="12392000" />
     </task>
     <task id="LOCAL-00001" summary="added default arguments to recognize_video.py">
       <created>1579683068887</created>
@@ -205,7 +216,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579696561213</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Cleanup and refactoring">
+      <created>1579700180865</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1579700180865</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -225,47 +243,49 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="added default arguments to recognize_video.py" />
     <MESSAGE value="added default arguments to all python files" />
     <MESSAGE value="reworked the return value as [name, probability]" />
-    <option name="LAST_COMMIT_MESSAGE" value="reworked the return value as [name, probability]" />
+    <MESSAGE value="Cleanup and refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleanup and refactoring" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2172" y="359" key="#Notifications" timestamp="1576865386722">
       <screen x="0" y="0" width="3440" height="1400" />
     </state>
     <state x="2172" y="359" key="#Notifications/0.0.3440.1400@0.0.3440.1400" timestamp="1576865386722" />
-    <state x="463" y="105" width="933" height="811" key="CommitChangelistDialog2" timestamp="1579696560028">
+    <state x="463" y="105" width="933" height="811" key="CommitChangelistDialog2" timestamp="1579700179845">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="463" y="105" key="CommitChangelistDialog2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579696560028" />
+    <state x="463" y="105" key="CommitChangelistDialog2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579700179845" />
     <state x="463" y="105" width="933" height="811" key="CommitChangelistDialog2/0.0.1680.1010@0.0.1680.1010" timestamp="1579685158986" />
-    <state width="1316" height="269" key="GridCell.Tab.0.bottom" timestamp="1579700071816">
+    <state width="1316" height="269" key="GridCell.Tab.0.bottom" timestamp="1579703202149">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state width="1316" height="269" key="GridCell.Tab.0.bottom/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579699735840" />
-    <state width="1316" height="269" key="GridCell.Tab.0.bottom/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579700071816" />
+    <state width="1316" height="269" key="GridCell.Tab.0.bottom/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579703202149" />
+    <state width="1316" height="269" key="GridCell.Tab.0.bottom/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579701282157" />
     <state width="1316" height="269" key="GridCell.Tab.0.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
     <state width="1696" height="174" key="GridCell.Tab.0.bottom/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state width="1316" height="269" key="GridCell.Tab.0.center" timestamp="1579700071816">
+    <state width="1316" height="269" key="GridCell.Tab.0.center" timestamp="1579703202148">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state width="1316" height="269" key="GridCell.Tab.0.center/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579699735839" />
-    <state width="1316" height="269" key="GridCell.Tab.0.center/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579700071816" />
+    <state width="1316" height="269" key="GridCell.Tab.0.center/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579703202148" />
+    <state width="1316" height="269" key="GridCell.Tab.0.center/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579701282157" />
     <state width="1316" height="269" key="GridCell.Tab.0.center/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
     <state width="1696" height="174" key="GridCell.Tab.0.center/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state width="1316" height="269" key="GridCell.Tab.0.left" timestamp="1579700071815">
+    <state width="1316" height="269" key="GridCell.Tab.0.left" timestamp="1579703202148">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state width="1316" height="269" key="GridCell.Tab.0.left/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579699735839" />
-    <state width="1316" height="269" key="GridCell.Tab.0.left/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579700071815" />
+    <state width="1316" height="269" key="GridCell.Tab.0.left/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579703202148" />
+    <state width="1316" height="269" key="GridCell.Tab.0.left/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579701282157" />
     <state width="1316" height="269" key="GridCell.Tab.0.left/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
     <state width="1696" height="174" key="GridCell.Tab.0.left/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state width="1316" height="269" key="GridCell.Tab.0.right" timestamp="1579700071816">
+    <state width="1316" height="269" key="GridCell.Tab.0.right" timestamp="1579703202149">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state width="1316" height="269" key="GridCell.Tab.0.right/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579699735840" />
-    <state width="1316" height="269" key="GridCell.Tab.0.right/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579700071816" />
+    <state width="1316" height="269" key="GridCell.Tab.0.right/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579703202149" />
+    <state width="1316" height="269" key="GridCell.Tab.0.right/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579701282157" />
     <state width="1316" height="269" key="GridCell.Tab.0.right/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
     <state width="1696" height="174" key="GridCell.Tab.0.right/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
     <state x="339" y="154" key="SettingsEditor" timestamp="1579696237789">
@@ -274,10 +294,10 @@
     <state x="339" y="154" key="SettingsEditor/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579696237789" />
     <state x="339" y="154" key="SettingsEditor/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579695287293" />
     <state x="339" y="154" key="SettingsEditor/0.0.1680.1010@0.0.1680.1010" timestamp="1579683793809" />
-    <state x="430" y="245" key="Vcs.Push.Dialog.v2" timestamp="1579696573343">
+    <state x="430" y="245" key="Vcs.Push.Dialog.v2" timestamp="1579700193634">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="430" y="245" key="Vcs.Push.Dialog.v2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579696573343" />
+    <state x="430" y="245" key="Vcs.Push.Dialog.v2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579700193634" />
     <state x="430" y="245" key="Vcs.Push.Dialog.v2/0.0.1680.1010@0.0.1680.1010" timestamp="1579684859962" />
     <state x="385" y="166" width="1288" height="1159" key="dock-window-1" timestamp="1576869953438">
       <screen x="0" y="0" width="3440" height="1400" />
@@ -290,6 +310,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FaceRecog$TorchTest.coverage" NAME="TorchTest Coverage Results" MODIFIED="1579683485062" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/FaceRecog$recognize_video.coverage" NAME="recognize_video Coverage Results" MODIFIED="1579699735826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FaceRecog$recognize_video.coverage" NAME="recognize_video Coverage Results" MODIFIED="1579703202129" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
