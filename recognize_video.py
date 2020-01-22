@@ -20,13 +20,13 @@ import os
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-d", "--detector", required=True,
+ap.add_argument("-d", "--detector", default='.\\face_detection_model\\',
 	help="path to OpenCV's deep learning face detector")
-ap.add_argument("-m", "--embedding-model", required=True,
+ap.add_argument("-m", "--embedding-model", default='.\\openface_nn4.small2.v1.t7',
 	help="path to OpenCV's deep learning face embedding model")
-ap.add_argument("-r", "--recognizer", required=True,
+ap.add_argument("-r", "--recognizer", default='.\\output\\recognizer.pickle',
 	help="path to model trained to recognize faces")
-ap.add_argument("-l", "--le", required=True,
+ap.add_argument("-l", "--le", default='.\\output\\le.pickle',
 	help="path to label encoder")
 ap.add_argument("-c", "--confidence", type=float, default=0.7,
 	help="minimum probability to filter weak detections")
