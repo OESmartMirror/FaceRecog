@@ -130,6 +130,8 @@ def loop_recog_for(num_of_frames):
 #print("result= " + Result)
 
 #eel.DisplayUser(Result)
+loop_recog_for(5)
+
 
 print("starting eel")
 eel.init('web')
