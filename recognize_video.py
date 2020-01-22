@@ -116,18 +116,18 @@ for x in range(5):
 			j = np.argmax(preds)
 			proba = preds[j]
 			name = le.classes_[j]
-			if proba > 0.75:
-				detectionresults.append(name)
+
+			detectionresults.append([name,proba])
 
 
 			# draw the bounding box of the face along with the
 			# associated probability
-			text = "{}: {:.2f}%".format(name, proba * 100)
-			y = startY - 10 if startY - 10 > 10 else startY + 10
-			cv2.rectangle(frame, (startX, startY), (endX, endY),
-				(0, 0, 255), 2)
-			cv2.putText(frame, text, (startX, y),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
+			#text = "{}: {:.2f}%".format(name, proba * 100)
+			#y = startY - 10 if startY - 10 > 10 else startY + 10
+			#cv2.rectangle(frame, (startX, startY), (endX, endY),
+			#	(0, 0, 255), 2)
+			#cv2.putText(frame, text, (startX, y),
+			#	cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
 
 
 
@@ -135,18 +135,20 @@ for x in range(5):
 	fps.update()
 
 	# show the output frame
-	cv2.imshow("Frame", frame)
-	key = cv2.waitKey(1) & 0xFF
+	#cv2.imshow("Frame", frame)
+	#key = cv2.waitKey(1) & 0xFF
 
 	# if the `q` key was pressed, break from the loop
-	if key == ord("q"):
-		break
+	#if key == ord("q"):
+	#	break
 
 
 if len(detectionresults) == 0:
 	print("No user seen")
 else:
-	print(mode(detectionresults))
+	detectionresults.sort(key=lambda qi: qi[1])
+
+	print(detectionresults[-1])
 
 
 

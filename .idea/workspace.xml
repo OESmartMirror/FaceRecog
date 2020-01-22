@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="97faa38d-ba59-4e72-af0b-72404db5021c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/install_dependencies.py" afterDir="false" />
+    <list default="true" id="97faa38d-ba59-4e72-af0b-72404db5021c" name="Default Changelist" comment="sdfadsagfdgfdgd">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extract_embeddings.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_embeddings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recognize_video.py" beforeDir="false" afterPath="$PROJECT_DIR$/recognize_video.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,7 +186,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1559727482093</updated>
-      <workItem from="1579682671942" duration="2107000" />
+      <workItem from="1579682671942" duration="4316000" />
     </task>
     <task id="LOCAL-00001" summary="added default arguments to recognize_video.py">
       <created>1579683068887</created>
@@ -197,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579683068887</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added default arguments to all python files">
+      <created>1579684851309</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1579684851309</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,45 +223,56 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added default arguments to recognize_video.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="added default arguments to recognize_video.py" />
+    <MESSAGE value="added default arguments to all python files" />
+    <option name="LAST_COMMIT_MESSAGE" value="added default arguments to all python files" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2172" y="359" key="#Notifications" timestamp="1576865386722">
       <screen x="0" y="0" width="3440" height="1400" />
     </state>
     <state x="2172" y="359" key="#Notifications/0.0.3440.1400@0.0.3440.1400" timestamp="1576865386722" />
-    <state x="463" y="105" key="CommitChangelistDialog2" timestamp="1579683067617">
+    <state x="463" y="105" width="933" height="811" key="CommitChangelistDialog2" timestamp="1579685158986">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="463" y="105" key="CommitChangelistDialog2/0.0.1680.1010@0.0.1680.1010" timestamp="1579683067617" />
-    <state width="1316" height="269" key="GridCell.Tab.0.bottom" timestamp="1579684790813">
+    <state x="463" y="105" width="933" height="811" key="CommitChangelistDialog2/0.0.1680.1010@0.0.1680.1010" timestamp="1579685158986" />
+    <state width="658" height="269" key="GridCell.Tab.0.bottom" timestamp="1579696371648">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
+    <state width="658" height="269" key="GridCell.Tab.0.bottom/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579696255927" />
+    <state width="658" height="269" key="GridCell.Tab.0.bottom/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579696371648" />
     <state width="1316" height="269" key="GridCell.Tab.0.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
     <state width="1696" height="174" key="GridCell.Tab.0.bottom/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state width="1316" height="269" key="GridCell.Tab.0.center" timestamp="1579684790813">
+    <state width="658" height="269" key="GridCell.Tab.0.center" timestamp="1579696371647">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
+    <state width="658" height="269" key="GridCell.Tab.0.center/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579696255927" />
+    <state width="658" height="269" key="GridCell.Tab.0.center/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579696371647" />
     <state width="1316" height="269" key="GridCell.Tab.0.center/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
     <state width="1696" height="174" key="GridCell.Tab.0.center/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state width="1316" height="269" key="GridCell.Tab.0.left" timestamp="1579684790813">
+    <state width="658" height="269" key="GridCell.Tab.0.left" timestamp="1579696371647">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
+    <state width="658" height="269" key="GridCell.Tab.0.left/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579696255927" />
+    <state width="658" height="269" key="GridCell.Tab.0.left/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579696371647" />
     <state width="1316" height="269" key="GridCell.Tab.0.left/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
     <state width="1696" height="174" key="GridCell.Tab.0.left/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state width="1316" height="269" key="GridCell.Tab.0.right" timestamp="1579684790813">
+    <state width="658" height="269" key="GridCell.Tab.0.right" timestamp="1579696371647">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
+    <state width="658" height="269" key="GridCell.Tab.0.right/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579696255927" />
+    <state width="658" height="269" key="GridCell.Tab.0.right/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579696371647" />
     <state width="1316" height="269" key="GridCell.Tab.0.right/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
     <state width="1696" height="174" key="GridCell.Tab.0.right/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state x="339" y="154" key="SettingsEditor" timestamp="1579683793809">
+    <state x="339" y="154" key="SettingsEditor" timestamp="1579696237789">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
+    <state x="339" y="154" key="SettingsEditor/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579696237789" />
+    <state x="339" y="154" key="SettingsEditor/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579695287293" />
     <state x="339" y="154" key="SettingsEditor/0.0.1680.1010@0.0.1680.1010" timestamp="1579683793809" />
-    <state x="430" y="245" key="Vcs.Push.Dialog.v2" timestamp="1579683238740">
+    <state x="430" y="245" key="Vcs.Push.Dialog.v2" timestamp="1579684859962">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="430" y="245" key="Vcs.Push.Dialog.v2/0.0.1680.1010@0.0.1680.1010" timestamp="1579683238740" />
+    <state x="430" y="245" key="Vcs.Push.Dialog.v2/0.0.1680.1010@0.0.1680.1010" timestamp="1579684859962" />
     <state x="385" y="166" width="1288" height="1159" key="dock-window-1" timestamp="1576869953438">
       <screen x="0" y="0" width="3440" height="1400" />
     </state>
@@ -268,6 +284,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FaceRecog$TorchTest.coverage" NAME="TorchTest Coverage Results" MODIFIED="1579683485062" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/FaceRecog$recognize_video.coverage" NAME="recognize_video Coverage Results" MODIFIED="1579683797435" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FaceRecog$recognize_video.coverage" NAME="recognize_video Coverage Results" MODIFIED="1579696255912" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
