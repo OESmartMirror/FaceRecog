@@ -6,5 +6,5 @@ def install(package):
 
 
 install("opencv-python")
-install("scikit-learn==0.20.3")
+install("scikit-learn")
 install("imutils")
