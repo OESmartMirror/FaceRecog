@@ -3,5 +3,7 @@ dataset/
 dataset_cropped/
 images/
 runs/
+venv/
+.idea/
 __pycache__/
 path.pyc

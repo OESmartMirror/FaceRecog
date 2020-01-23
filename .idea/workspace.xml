@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97faa38d-ba59-4e72-af0b-72404db5021c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/face.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/face.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/install_dependencies.py" beforeDir="false" afterPath="$PROJECT_DIR$/install_dependencies.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +29,7 @@
     </option>
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="MERGE" />
   </component>
   <component name="ProjectId" id="1TCGBMjyZcJ3Drk3RO9G1NCMMef" />
   <component name="ProjectLevelVcsManager">
@@ -190,7 +193,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1559727482093</updated>
-      <workItem from="1579682671942" duration="13320000" />
+      <workItem from="1579682671942" duration="14197000" />
     </task>
     <task id="LOCAL-00001" summary="added default arguments to recognize_video.py">
       <created>1579683068887</created>
@@ -227,7 +230,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579706406223</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="updated package information">
+      <created>1579707892679</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1579707892679</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -253,17 +263,18 @@
     <MESSAGE value="reworked the return value as [name, probability]" />
     <MESSAGE value="Cleanup and refactoring" />
     <MESSAGE value="implementing eel" />
-    <option name="LAST_COMMIT_MESSAGE" value="implementing eel" />
+    <MESSAGE value="updated package information" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated package information" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2172" y="359" key="#Notifications" timestamp="1576865386722">
       <screen x="0" y="0" width="3440" height="1400" />
     </state>
     <state x="2172" y="359" key="#Notifications/0.0.3440.1400@0.0.3440.1400" timestamp="1576865386722" />
-    <state x="463" y="105" width="933" height="811" key="CommitChangelistDialog2" timestamp="1579706405038">
+    <state x="463" y="105" width="933" height="811" key="CommitChangelistDialog2" timestamp="1579707891544">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="463" y="105" key="CommitChangelistDialog2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579706405038" />
+    <state x="463" y="105" key="CommitChangelistDialog2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579707891544" />
     <state x="463" y="105" width="933" height="811" key="CommitChangelistDialog2/0.0.1680.1010@0.0.1680.1010" timestamp="1579685158986" />
     <state width="1316" height="269" key="GridCell.Tab.0.bottom" timestamp="1579707846668">
       <screen x="0" y="0" width="1680" height="1010" />
@@ -293,17 +304,29 @@
     <state width="1316" height="269" key="GridCell.Tab.0.right/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579707846668" />
     <state width="1316" height="269" key="GridCell.Tab.0.right/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
     <state width="1696" height="174" key="GridCell.Tab.0.right/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state x="339" y="154" key="SettingsEditor" timestamp="1579696237789">
+    <state x="158" y="96" key="MergeDialog" timestamp="1579765875686">
+      <screen x="0" y="0" width="1680" height="1010" />
+    </state>
+    <state x="158" y="96" key="MergeDialog/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579765875686" />
+    <state x="550" y="229" key="MultipleFileMergeDialog" timestamp="1579765903525">
+      <screen x="0" y="0" width="1680" height="1010" />
+    </state>
+    <state x="550" y="229" key="MultipleFileMergeDialog/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579765903525" />
+    <state x="339" y="154" key="SettingsEditor" timestamp="1579765929486">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="339" y="154" key="SettingsEditor/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579696237789" />
-    <state x="339" y="154" key="SettingsEditor/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579695287293" />
+    <state x="339" y="154" key="SettingsEditor/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579765929486" />
     <state x="339" y="154" key="SettingsEditor/0.0.1680.1010@0.0.1680.1010" timestamp="1579683793809" />
     <state x="430" y="245" key="Vcs.Push.Dialog.v2" timestamp="1579706414131">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="430" y="245" key="Vcs.Push.Dialog.v2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579706414131" />
     <state x="430" y="245" key="Vcs.Push.Dialog.v2/0.0.1680.1010@0.0.1680.1010" timestamp="1579684859962" />
+    <state x="647" y="430" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1579765978915">
+      <screen x="0" y="0" width="1680" height="1010" />
+    </state>
+    <state x="647" y="430" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579765978915" />
     <state x="385" y="166" width="1288" height="1159" key="dock-window-1" timestamp="1576869953438">
       <screen x="0" y="0" width="3440" height="1400" />
     </state>
