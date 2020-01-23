@@ -8,6 +8,7 @@ import time
 import cv2
 import os
 import eel
+import pyzbar.pyzbar as pyzbar
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -110,12 +111,7 @@ def add_to_output_buffer(name, proba):
     # print('adding result to output buffer')
     detectionresults.append([name, proba])
 
-@eel.expose
-def loop_recog_for(num_of_frames):
-    print("looping for " + str(num_of_frames) + "frames")
-    for x in range(num_of_frames):
-        frame = vs.read()
-        Detect_face(frame)
+def read_from_output_buffer():
     if len(detectionresults) == 0:
         return "No user seen"
     else:
@@ -124,13 +120,43 @@ def loop_recog_for(num_of_frames):
         print(detectionresults[-1])
         return str(detectionresults[-1])
 
+@eel.expose
+def loop_recog_for(num_of_frames):
+    print("looping for " + str(num_of_frames) + "frames")
+    for x in range(num_of_frames):
+        frame = vs.read()
+        Detect_face(frame)
+
+    result = read_from_output_buffer()
+    return result
+
+
+def read_qr_from(frame):
+    QRCode = pyzbar.decode(frame)
+    return QRCode.data
+
+
+def perform_recognition_flow_for(num_of_frames):
+    for _ in range(num_of_frames):
+        frame = vs.read()
+
+        qr_result = read_qr_from(frame)
+
+        if qr_result != "":
+            return qr_result
+        else:
+            Detect_face(frame)
+
+        return read_from_output_buffer()
+
+
 #print("preparing for face recog...")
 #Result = loop_recog_for(5)
 
 #print("result= " + Result)
 
 #eel.DisplayUser(Result)
-loop_recog_for(5)
+#loop_recog_for(5)
 
 
 print("starting eel")
