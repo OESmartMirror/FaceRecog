@@ -8,13 +8,21 @@
     <script type="text/javascript">
 
         eel.expose(DisplayUser);
-        function DisplayUser(Name) {
-            document.getElementById("User").innerHTML = Name;
+        async function DisplayUser() {
+            let user = await eel.loop_recog_for(5)();
+            document.getElementById("User").innerHTML = user;
             }
+
+
+
     </script>
 </head>
 <body>
     <h1 id="User"></h1>
     <p>This is Text</p>
+
+     <script type="text/javascript">
+         DisplayUser();
+     </script>
 </body>
 </html>

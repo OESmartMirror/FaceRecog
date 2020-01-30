@@ -120,6 +120,7 @@ def read_from_output_buffer():
         print(detectionresults[-1])
         return str(detectionresults[-1])
 
+
 @eel.expose
 def loop_recog_for(num_of_frames):
     print("looping for " + str(num_of_frames) + "frames")
@@ -148,6 +149,16 @@ def perform_recognition_flow_for(num_of_frames):
             Detect_face(frame)
 
         return read_from_output_buffer()
+
+
+@eel.expose
+def mock_recog(num_of_frames):
+    if num_of_frames > 1:
+        print("it is recece!")
+        return "recece"
+    else:
+        print("it's not recece")
+        return "not recece"
 
 
 #print("preparing for face recog...")
