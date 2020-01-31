@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97faa38d-ba59-4e72-af0b-72404db5021c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/DBTest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/debug.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DBTest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/embeddings.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/output/embeddings.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/le.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/output/le.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/recognizer.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/output/recognizer.pickle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recognize_video.py" beforeDir="false" afterPath="$PROJECT_DIR$/recognize_video.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/main.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,12 +51,17 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/dataset/Patrik" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\SandorPatrikToth\FaceRecog\dataset\Patrik" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.recognize_video">
-    <configuration name="DBTest" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="DBTest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="face" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -64,51 +74,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DBTest" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="SimpleTest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="face" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SimpleTest.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TorchTest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="face" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TorchTest.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DBTest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -139,6 +105,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="extract_embeddings" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="face" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/extract_embeddings.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="recognize_video" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="face" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -161,13 +149,35 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="train_model" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="face" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train_model.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.recognize_video" />
-        <item itemvalue="Python.TorchTest" />
-        <item itemvalue="Python.SimpleTest" />
-        <item itemvalue="Python.TorchTrainTest" />
+        <item itemvalue="Python.train_model" />
+        <item itemvalue="Python.extract_embeddings" />
         <item itemvalue="Python.DBTest" />
+        <item itemvalue="Python.TorchTrainTest" />
       </list>
     </recent_temporary>
   </component>
@@ -195,7 +205,8 @@
       <updated>1559727482093</updated>
       <workItem from="1579682671942" duration="15117000" />
       <workItem from="1579768529348" duration="8777000" />
-      <workItem from="1580385241005" duration="5669000" />
+      <workItem from="1580385241005" duration="5768000" />
+      <workItem from="1580460827802" duration="13129000" />
     </task>
     <task id="LOCAL-00001" summary="added default arguments to recognize_video.py">
       <created>1579683068887</created>
@@ -253,7 +264,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579791497057</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="It works">
+      <created>1580398310664</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1580398310664</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -282,48 +300,66 @@
     <MESSAGE value="implementing eel" />
     <MESSAGE value="updated package information" />
     <MESSAGE value="implemented QR code reader" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented QR code reader" />
+    <MESSAGE value="It works" />
+    <option name="LAST_COMMIT_MESSAGE" value="It works" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2172" y="359" key="#Notifications" timestamp="1576865386722">
       <screen x="0" y="0" width="3440" height="1400" />
     </state>
     <state x="2172" y="359" key="#Notifications/0.0.3440.1400@0.0.3440.1400" timestamp="1576865386722" />
-    <state x="463" y="105" width="933" height="811" key="CommitChangelistDialog2" timestamp="1579791486963">
-      <screen x="0" y="0" width="1680" height="1010" />
+    <state x="2647" y="-195" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1580471665370">
+      <screen x="1920" y="-518" width="1920" height="1040" />
+    </state>
+    <state x="2647" y="-195" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040/1920.-518.1920.1040@1920.-518.1920.1040" timestamp="1580471665370" />
+    <state x="2449" y="108" width="933" height="811" key="CommitChangelistDialog2" timestamp="1580398308670">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="463" y="105" key="CommitChangelistDialog2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579791486963" />
     <state x="463" y="105" width="933" height="811" key="CommitChangelistDialog2/0.0.1680.1010@0.0.1680.1010" timestamp="1579685158986" />
-    <state width="937" height="280" key="GridCell.Tab.0.bottom" timestamp="1580396732557">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="2449" y="108" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580398308670" />
+    <state width="1877" height="280" key="GridCell.Tab.0.bottom" timestamp="1580474638236">
+      <screen x="1920" y="-518" width="1920" height="1040" />
     </state>
     <state width="658" height="269" key="GridCell.Tab.0.bottom/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579788194189" />
     <state width="818" height="271" key="GridCell.Tab.0.bottom/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579879696103" />
     <state width="1316" height="269" key="GridCell.Tab.0.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
+    <state width="1877" height="280" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.-518.1920.1040@1920.-518.1920.1040" timestamp="1580474638236" />
+    <state width="1877" height="280" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.-852.1920.1040@1920.-852.1920.1040" timestamp="1580471341765" />
+    <state width="937" height="280" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580467751558" />
     <state width="937" height="280" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1580396732557" />
     <state width="1696" height="174" key="GridCell.Tab.0.bottom/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state width="937" height="280" key="GridCell.Tab.0.center" timestamp="1580396732556">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1877" height="280" key="GridCell.Tab.0.center" timestamp="1580474638236">
+      <screen x="1920" y="-518" width="1920" height="1040" />
     </state>
     <state width="658" height="269" key="GridCell.Tab.0.center/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579788194188" />
     <state width="818" height="271" key="GridCell.Tab.0.center/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579879696102" />
     <state width="1316" height="269" key="GridCell.Tab.0.center/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
+    <state width="1877" height="280" key="GridCell.Tab.0.center/0.0.1920.1040/1920.-518.1920.1040@1920.-518.1920.1040" timestamp="1580474638236" />
+    <state width="1877" height="280" key="GridCell.Tab.0.center/0.0.1920.1040/1920.-852.1920.1040@1920.-852.1920.1040" timestamp="1580471341765" />
+    <state width="937" height="280" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580467751558" />
     <state width="937" height="280" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1580396732556" />
     <state width="1696" height="174" key="GridCell.Tab.0.center/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state width="937" height="280" key="GridCell.Tab.0.left" timestamp="1580396732556">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1877" height="280" key="GridCell.Tab.0.left" timestamp="1580474638236">
+      <screen x="1920" y="-518" width="1920" height="1040" />
     </state>
     <state width="658" height="269" key="GridCell.Tab.0.left/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579788194188" />
     <state width="818" height="271" key="GridCell.Tab.0.left/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579879696102" />
     <state width="1316" height="269" key="GridCell.Tab.0.left/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
+    <state width="1877" height="280" key="GridCell.Tab.0.left/0.0.1920.1040/1920.-518.1920.1040@1920.-518.1920.1040" timestamp="1580474638236" />
+    <state width="1877" height="280" key="GridCell.Tab.0.left/0.0.1920.1040/1920.-852.1920.1040@1920.-852.1920.1040" timestamp="1580471341765" />
+    <state width="937" height="280" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580467751557" />
     <state width="937" height="280" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1580396732556" />
     <state width="1696" height="174" key="GridCell.Tab.0.left/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
-    <state width="937" height="280" key="GridCell.Tab.0.right" timestamp="1580396732556">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1877" height="280" key="GridCell.Tab.0.right" timestamp="1580474638236">
+      <screen x="1920" y="-518" width="1920" height="1040" />
     </state>
     <state width="658" height="269" key="GridCell.Tab.0.right/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579788194188" />
     <state width="818" height="271" key="GridCell.Tab.0.right/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579879696103" />
     <state width="1316" height="269" key="GridCell.Tab.0.right/0.0.1680.1010@0.0.1680.1010" timestamp="1579684790813" />
+    <state width="1877" height="280" key="GridCell.Tab.0.right/0.0.1920.1040/1920.-518.1920.1040@1920.-518.1920.1040" timestamp="1580474638236" />
+    <state width="1877" height="280" key="GridCell.Tab.0.right/0.0.1920.1040/1920.-852.1920.1040@1920.-852.1920.1040" timestamp="1580471341765" />
+    <state width="937" height="280" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580467751558" />
     <state width="937" height="280" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1580396732556" />
     <state width="1696" height="174" key="GridCell.Tab.0.right/0.0.3440.1400@0.0.3440.1400" timestamp="1576870494016" />
     <state x="158" y="96" key="MergeDialog" timestamp="1579765875686">
@@ -340,20 +376,22 @@
     <state x="339" y="154" key="SettingsEditor/0.0.1680.1010/1680.0.1920.1160/3600.0.1920.1040@0.0.1680.1010" timestamp="1579696237789" />
     <state x="339" y="154" key="SettingsEditor/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579791298408" />
     <state x="339" y="154" key="SettingsEditor/0.0.1680.1010@0.0.1680.1010" timestamp="1579683793809" />
-    <state x="430" y="245" key="Vcs.Push.Dialog.v2" timestamp="1579791504437">
-      <screen x="0" y="0" width="1680" height="1010" />
+    <state x="2411" y="252" key="Vcs.Push.Dialog.v2" timestamp="1580398324182">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="430" y="245" key="Vcs.Push.Dialog.v2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579791504437" />
     <state x="430" y="245" key="Vcs.Push.Dialog.v2/0.0.1680.1010@0.0.1680.1010" timestamp="1579684859962" />
-    <state x="610" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1580385244025">
+    <state x="2411" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580398324182" />
+    <state x="610" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1580460831225">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="534" y="337" key="com.intellij.ide.util.TipDialog/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579768540539" />
-    <state x="610" y="347" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1580385244025" />
-    <state x="647" y="430" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1579791448158">
-      <screen x="0" y="0" width="1680" height="1010" />
+    <state x="610" y="347" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1580460831225" />
+    <state x="2659" y="-75" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1580480433392">
+      <screen x="1920" y="-518" width="1920" height="1040" />
     </state>
     <state x="647" y="430" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1680.1010/1680.0.1920.1160@0.0.1680.1010" timestamp="1579791448158" />
+    <state x="2659" y="-75" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.-518.1920.1040/0.0.1920.1040@1920.-518.1920.1040" timestamp="1580480433392" />
     <state x="385" y="166" width="1288" height="1159" key="dock-window-1" timestamp="1576869953438">
       <screen x="0" y="0" width="3440" height="1400" />
     </state>
@@ -365,6 +403,10 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FaceRecog$TorchTest.coverage" NAME="TorchTest Coverage Results" MODIFIED="1579683485062" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/FaceRecog$recognize_video.coverage" NAME="recognize_video Coverage Results" MODIFIED="1580396732537" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FaceRecog$extract_embeddings.coverage" NAME="extract_embeddings Coverage Results" MODIFIED="1580473616418" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FaceRecog$recognize_video.coverage" NAME="recognize_video Coverage Results" MODIFIED="1580474638220" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FaceRecog$DBTest.coverage" NAME="DBTest Coverage Results" MODIFIED="1580471872272" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FaceRecog$TorchTrainTest.coverage" NAME="TorchTrainTest Coverage Results" MODIFIED="1580471341752" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FaceRecog$train_model.coverage" NAME="train_model Coverage Results" MODIFIED="1580473630582" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

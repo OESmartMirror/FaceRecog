@@ -1,5 +1,17 @@
 body {
-  background-color: black;
+  background-color: black !important;
   color: white;
   size: 30px;
+}
+p {
+  color: white !important;
+}
+
+.time {
+  font-size: 30pt;
+}
+
+.user {
+  font-family: Calibri;
+  font-size: 24pt;
 }

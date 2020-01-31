@@ -118,37 +118,48 @@ def read_from_output_buffer():
         detectionresults.sort(key=lambda qi: qi[1])
 
         print(detectionresults[-1])
-        return str(detectionresults[-1])
+        return detectionresults[-1]
 
 
 @eel.expose
 def loop_recog_for(num_of_frames):
+    detectionresults.clear()
     print("looping for " + str(num_of_frames) + "frames")
     for x in range(num_of_frames):
         frame = vs.read()
         Detect_face(frame)
 
-    result = read_from_output_buffer()
-    return result
+    intermediate = read_from_output_buffer()
+    if intermediate == "No user seen":
+        return "No user seen"
+    else:
+        result = intermediate[0]
+        return result
 
 
 def read_qr_from(frame):
     QRCode = pyzbar.decode(frame)
-    return QRCode.data
+    if QRCode is not []:
+        return QRCode.data
 
-
+@eel.expose
 def perform_recognition_flow_for(num_of_frames):
     for _ in range(num_of_frames):
         frame = vs.read()
 
         qr_result = read_qr_from(frame)
 
-        if qr_result != "":
+        if qr_result is not []:
             return qr_result
         else:
             Detect_face(frame)
 
-        return read_from_output_buffer()
+        intermediate = read_from_output_buffer()
+        if intermediate == "No user seen":
+            return "No user seen"
+        else:
+            result = intermediate[0]
+            return result
 
 
 @eel.expose
@@ -161,18 +172,16 @@ def mock_recog(num_of_frames):
         return "not recece"
 
 
-#print("preparing for face recog...")
-#Result = loop_recog_for(5)
-
-#print("result= " + Result)
-
-#eel.DisplayUser(Result)
-#loop_recog_for(5)
-
-
 print("starting eel")
 eel.init('web')
 eel.start('main.html')
+
+
+
+
+
+
+
 
 # do a bit of cleanup
 cv2.destroyAllWindows()

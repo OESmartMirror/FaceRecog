@@ -1,4 +1,3 @@
-
 import mysql.connector
 
 server = "cst04.ddns.net"
@@ -22,4 +21,4 @@ cursor.execute("SHOW TABLES")
 for x in cursor:
     print(x)
 
-print(cursor.arraysize)
+#print(cursor.arraysize)

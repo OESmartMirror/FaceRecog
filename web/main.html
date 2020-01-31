@@ -1,28 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" type="text/css" href=".\css\style.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>App</title>
     <script type="text/javascript" src="/eel.js"></script>
     <script type="text/javascript">
 
         eel.expose(DisplayUser);
         async function DisplayUser() {
-            let user = await eel.loop_recog_for(5)();
+            let user = await eel.loop_recog_for(10)();
             document.getElementById("User").innerHTML = user;
             }
+        var myVar = setInterval(myTimer, 1000);
+        var recog_timer = setInterval(DisplayUser, 10000)
 
+        function myTimer() {
+            var d = new Date();
+             document.getElementById("Clock").innerHTML = d.toLocaleTimeString();
+        }
 
 
     </script>
 </head>
-<body>
-    <h1 id="User"></h1>
-    <p>This is Text</p>
+<body class="bg-dark">
+    <div class="container-fluid">
 
-     <script type="text/javascript">
-         DisplayUser();
-     </script>
+        <div id="row-0" class="row">
+
+
+
+            <div id="cell-0" class="col-lg-4">
+                <p id="User" class="user"></p>
+                <p id="Clock" class="time"></p>
+                <script type="text/javascript">
+                       DisplayUser();
+                </script>
+            </div>
+
+
+
+            <div id="cell-1" class="col-lg-4">
+
+            </div>
+
+
+
+            <div id="cell-2" class="col-lg-4">
+                <script type='text/javascript'
+                    src='https://darksky.net/widget/default/47.19112696899816,18.424762578125/ca12/en.js?width=100%&height=350&title=Székesfehérvár,
+                    Fejér &textColor=ffffff&bgColor=000000&transparency=false&skyColor=undefined&fontFamily=Default&customFont=&units=ca
+                    &htColor=ffffff&ltColor=cecece&displaySum=yes&displayHeader=yes'>
+                </script>
+            </div>
+
+
+        </div>
+
+
+
+        <div id="row-1" class="row">
+
+
+
+            <div id="cell-3" class="col-lg-4">
+
+            </div>
+
+
+
+            <div id="cell-4" class="col-lg-4">
+
+            </div>
+
+
+
+            <div id="cell-5" class="col-lg-4">
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <div id="row-2" class="row">
+
+
+
+            <div id="cell-6" class="col-lg-4">
+
+            </div>
+
+
+
+            <div id="cell-7" class="col-lg-4">
+
+            </div>
+
+
+
+            <div id="cell-8" class="col-lg-4">
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
 </body>
 </html>
