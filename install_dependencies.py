@@ -8,3 +8,4 @@ def install(package):
 install("opencv-python")
 install("scikit-learn")
 install("imutils")
+install("pyzbar")

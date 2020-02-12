@@ -124,7 +124,7 @@ def read_from_output_buffer():
 @eel.expose
 def loop_recog_for(num_of_frames):
     detectionresults.clear()
-    print("looping for " + str(num_of_frames) + "frames")
+    print("looping for " + str(num_of_frames) + " frames")
     for x in range(num_of_frames):
         frame = vs.read()
         Detect_face(frame)
