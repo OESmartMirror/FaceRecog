@@ -3,6 +3,10 @@ import path
 import os
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image
+from imutils.video import VideoStream
+import imutils
+import cv2
+import time
 
 
 def return_closest_tensor(collection):
@@ -23,6 +27,46 @@ def convert_to_rgb(imagePath):
     rgb_im.save(imagePath)
 
 
+def extract_embeddings():
+    global embeddings
+    for (i, imagePath) in enumerate(imagePaths):
+        # extract the person name from the image path
+        # print("[INFO] processing image {}/{}".format(i + 1,
+        #   len(imagePaths)))
+        name = imagePath.split(os.path.sep)[-2]
+
+        convert_to_rgb(imagePath)
+
+        img = Image.open(imagePath)
+        names.append(name)
+        # perform face detection on the image
+        cropped_images.append(mtcnn(img))
+    img_cropped = torch.stack(cropped_images).to(device)
+    embeddings = resnet(img_cropped).detach().cpu()
+    for (i, imagePath) in enumerate(imagePaths):
+        person.append([names[i], embeddings[i]])
+
+
+def extract_tensor_from_evaluation_file():
+    global embedding
+    convert_to_rgb(evaluation_file)
+    img_eval = Image.open(evaluation_file)
+    eval_ims.append(mtcnn(img_eval))
+    pre_recog = torch.stack(eval_ims).to(device)
+    embedding = resnet(pre_recog).detach().cpu()
+
+def extract_tensor_from_image(img):
+    container = [mtcnn(img)]
+    stacked = torch.stack(container).to(device)
+    tensor = resnet(stacked).detach().cpu()
+    return tensor
+
+def get_image_from_camera():
+    vs = VideoStream(src=0).start()
+    time.sleep(2.0)
+    frame = vs.read()
+    return frame
+
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print('Running on device: {}'.format(device))
 
@@ -33,8 +77,8 @@ mtcnn = MTCNN(
 )
 resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
 
-imagePaths = list(path.list_images(".\\dataset\\"))
-datapath = './Eval/test_1/test1.jpg'
+imagePaths = list(path.list_images(".\\Dataset\\"))
+evaluation_file = './Eval/test_1/test1.jpg'
 
 embeddings = []
 cropped_images = []
@@ -43,38 +87,17 @@ names = []
 eval_ims = []
 distances = []
 
-for (i, imagePath) in enumerate(imagePaths):
-    # extract the person name from the image path
-    # print("[INFO] processing image {}/{}".format(i + 1,
-    #   len(imagePaths)))
-    name = imagePath.split(os.path.sep)[-2]
+extract_embeddings()
 
-    convert_to_rgb(imagePath)
+#extract_tensor_from_evaluation_file()
 
-    img = Image.open(imagePath)
-    names.append(name)
-    # perform face detection on the image
-    cropped_images.append(mtcnn(img))
+frame = get_image_from_camera()
 
-
-img_cropped = torch.stack(cropped_images).to(device)
-embeddings = resnet(img_cropped).detach().cpu()
-
-
-for i in range(14):
-    person.append([names[i], embeddings[i]])
-
-
-convert_to_rgb(datapath)
-img_eval = Image.open(datapath)
-eval_ims.append(mtcnn(img_eval))
-pre_recog = torch.stack(eval_ims).to(device)
-embedding = resnet(pre_recog).detach().cpu()
-
+embedding = extract_tensor_from_image(frame)
 
 for item in person:
     distances.append([item[0], (item[1] - embedding[0]).norm().item()])
 
 result = return_closest_tensor(distances)
-probability = (1 - (result[1] / 4)) * 100
+probability = (1 - (result[1] / 2)) * 100
 print("result: \n " + result[0] + ' ' + str(probability) + "%")
