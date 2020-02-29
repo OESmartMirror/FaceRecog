@@ -9,6 +9,7 @@ from imutils.video import VideoStream
 import imutils
 import time
 import cv2
+from PIL import Image
 
 #vs = VideoStream(src=0).start()
 #time.sleep(2.0)
@@ -25,6 +26,7 @@ mtcnn = MTCNN(
 )
 
 resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
+#resnet = InceptionResnetV1(pretrained='vggface2').eval()
 
 def collate_fn(x):
     return x[0]
@@ -38,12 +40,44 @@ names = []
 for x, y in loader:
     x_aligned, prob = mtcnn(x, return_prob=True)
     if x_aligned is not None:
-        print('Face detected with probability: {:8f}'.format(prob))
+        #print('Face detected with probability: {:8f}'.format(prob))
         aligned.append(x_aligned)
         names.append(dataset.idx_to_class[y])
 
 aligned = torch.stack(aligned).to(device)
 embeddings = resnet(aligned).detach().cpu()
 
-dists = [[(e1 - e2).norm().item() for e2 in embeddings] for e1 in embeddings]
-print(pd.DataFrame(dists, columns=names, index=names))
+#dists = [[(e1 - e2).norm().item() for e2 in embeddings] for e1 in embeddings]
+#print(pd.DataFrame(dists, columns=names, index=names))
+#print(dists)
+
+
+
+file = open("torch_test_output.txt", 'w')
+for i in embeddings:
+    file.write(str(i))
+    file.write(str("\n"))
+file.close()
+
+
+eval_dataset = datasets.ImageFolder('./Eval')
+eval_dataset.idx_to_class = {i:c for c, i in eval_dataset.class_to_idx.items()}
+eval_loader = DataLoader(eval_dataset, collate_fn=collate_fn, num_workers=workers)
+
+eval_aligned = []
+eval_names = []
+for x, y in eval_loader:
+    x_aligned, prob = mtcnn(x, return_prob=True)
+    if x_aligned is not None:
+        #print('Face detected with probability: {:8f}'.format(prob))
+        eval_aligned.append(x_aligned)
+        eval_names.append(dataset.idx_to_class[y])
+
+eval_aligned = torch.stack(eval_aligned).to(device)
+eval_embeddings = resnet(eval_aligned).detach().cpu()
+
+#dists = [[[(e1 - e2).norm().item(), ]for e2 in eval_embeddings] for e1 in embeddings]
+dists = []
+for i in range(14):
+    dists += [(embeddings[i] - eval_embeddings).norm().item(), i+1]
+print(dists)
