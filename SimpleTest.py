@@ -9,10 +9,6 @@ import cv2
 import time
 
 
-def print_perf_ns(string, start, finish):
-    print(f'{string} : took {(finish - start)} nanoseconds')
-
-
 def print_perf(string, start, finish):
     print(f'{string} : took {round((finish - start), 2)} seconds')
 
@@ -47,7 +43,7 @@ def convert_to_rgb_jpg(imagePaths):
         rgb_im.save(new_file)
         # print("file processed and saved as" + new_file)
     finish = time.perf_counter()
-    print_perf("[PERF] Processing images", start, finish)
+    print_perf("[PERF] Processing reference images", start, finish)
 
 
 def extract_embeddings(local_processed_path):
@@ -58,7 +54,7 @@ def extract_embeddings(local_processed_path):
 
     for (i, imagePath) in enumerate(local_processed_path):
         # extract the person name from the image path
-        # print("[INFO] processing image {}/{}".format(i + 1, len(imagePaths)))
+        print("[INFO] processing image {}/{}".format(i + 1, len(local_processed_path)))
         name = imagePath.split(os.path.sep)[-2]
 
         img = Image.open(imagePath)
@@ -69,7 +65,7 @@ def extract_embeddings(local_processed_path):
         cropped_images.append(mtcnn(img))
 
         face_finish = time.perf_counter()
-        print_perf(f'[PERF] Face detection - {name}', face_start, face_finish)
+        # print_perf(f'[PERF] Face detection - {name}', face_start, face_finish)
 
     extract_start = time.perf_counter()
 
@@ -86,6 +82,16 @@ def extract_embeddings(local_processed_path):
     print_perf("[PERF] Embedding extraction", extract_start, extract_finish)
 
     return persons
+
+
+def calculate_distances(reference, evaluation):
+    distances = []
+    for reference_item in reference:
+        for eval_item in evaluation:
+            names = ([reference_item[0], eval_item[0]])
+            distance = (reference_item[1] - eval_item[1]).norm().item()
+            distances.append([names, distance])
+    return distances
 
 
 def extract_tensor_from_file(file):
@@ -111,6 +117,20 @@ def get_image_from_camera():
     return frame
 
 
+def convert_images_to_RGB_jpeg(path):
+    conv_eval_start = time.perf_counter()
+    for (i, file_ref_path) in enumerate(path):
+        old_file_path = file_ref_path
+        image_to_convert = Image.open(old_file_path)
+        rgb_im = image_to_convert.convert('RGB')
+        new_file_path = file_ref_path.replace("png", "jpg")
+        rgb_im.save(new_file_path)
+        if not old_file_path == new_file_path:
+            os.remove(file_ref_path)
+    conv_eval_finish = time.perf_counter()
+    print_perf("[PERF] Processing evaluation images", conv_eval_start, conv_eval_finish)
+
+
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print('[INFO] Running on device: {}'.format(device))
 
@@ -118,40 +138,33 @@ mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20, thresholds=[0.6, 0.7, 
               device=device)
 resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
 
-imagePaths = list(path.list_images(".\\Dataset\\"))
-processed_path = list(path.list_images(".\\Processed\\"))
-evaluation_file = './Eval/test_1/test1.jpg'
-eval_folder = list(path.list_images(".\\Eval\\"))
+dataset_paths = list(path.list_images(".\\Dataset\\"))
+eval_paths = list(path.list_images(".\\Eval\\"))
 
 
+convert_images_to_RGB_jpeg(dataset_paths)
+convert_images_to_RGB_jpeg(eval_paths)
+
+new_dataset_paths = list(path.list_images(".\\Dataset\\"))
+new_eval_paths = list(path.list_images(".\\Eval\\"))
 
 
+reference_data = extract_embeddings(new_dataset_paths)
 
-convert_to_rgb_jpg(imagePaths)
+eval_data = extract_embeddings(new_eval_paths)
 
-reference_data = extract_embeddings(processed_path)
+if True:
+    # frame = get_image_from_camera()
+    # embedding = extract_tensor_from_image(frame)
+    distances_between_people = calculate_distances(reference_data, eval_data)
 
-eval_data = extract_embeddings(eval_folder)
+    for row in distances_between_people:
+        name1 = row[0][0]
+        name2 = row[0][1]
+        dist = row[1]
+        print(f'{name1};{name2};{dist}')
 
-#embedding = extract_tensor_from_file(evaluation_file)
-
-#frame = get_image_from_camera()
-#embedding = extract_tensor_from_image(frame)
-distances_between_people = []
-for reference_item in reference_data:
-    for eval_item in eval_data:
-        names = ([reference_item[0], eval_item[0]])
-        distance = (reference_item[1] - eval_item[1]).norm().item()
-        distances_between_people.append([names, distance])
-
-for row in distances_between_people:
-    name1 = row[0][0]
-    name2 = row[0][1]
-    dist = row[1]
-    print(f'{name1};{name2};{dist}')
-
-
-result = return_closest_tensor(distances_between_people)
-conf = round((1 - (result[1] / 2)),2) * 100
-print(f'[RESULT] The smallest distance can be found between: "{result[0][0]}" and "{result[0][1]}" , with the distance of {round(result[1],2)}, equating to {conf}% confidence in recognition')
-
+    result = return_closest_tensor(distances_between_people)
+    conf = round((1 - (result[1] / 2)), 2) * 100
+    print(
+        f'[RESULT] The smallest distance can be found between: "{result[0][0]}" and "{result[0][1]}" , with the distance of {round(result[1], 2)}, equating to {conf}% confidence in recognition')
