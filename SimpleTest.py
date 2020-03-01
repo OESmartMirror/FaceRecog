@@ -54,7 +54,7 @@ def extract_embeddings(local_processed_path):
 
     for (i, imagePath) in enumerate(local_processed_path):
         # extract the person name from the image path
-        print("[INFO] processing image {}/{}".format(i + 1, len(local_processed_path)))
+        # print("[INFO] processing image {}/{}".format(i + 1, len(local_processed_path)))
         name = imagePath.split(os.path.sep)[-2]
 
         img = Image.open(imagePath)
