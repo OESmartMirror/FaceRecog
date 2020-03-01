@@ -9,6 +9,14 @@ import cv2
 import time
 
 
+def print_perf_ns(string, start, finish):
+    print(f'{string} : took {(finish - start)} nanoseconds')
+
+
+def print_perf(string, start, finish):
+    print(f'{string} : took {round((finish - start), 2)} seconds')
+
+
 def return_closest_tensor(collection):
     if not collection:
         raise ValueError('empty input')
@@ -21,39 +29,73 @@ def return_closest_tensor(collection):
     return min_dist
 
 
-def convert_to_rgb(imagePath):
-    image_to_convert = Image.open(imagePath)
-    rgb_im = image_to_convert.convert('RGB')
-    rgb_im.save(imagePath)
-
-
-def extract_embeddings():
-    global embeddings
+def convert_to_rgb_jpg(imagePaths):
+    start = time.perf_counter()
     for (i, imagePath) in enumerate(imagePaths):
-        # extract the person name from the image path
-        # print("[INFO] processing image {}/{}".format(i + 1,
-        #   len(imagePaths)))
-        name = imagePath.split(os.path.sep)[-2]
+        print(f'[INFO] processing image {i + 1}/{len(imagePaths)}')
 
-        convert_to_rgb(imagePath)
+        image_to_convert = Image.open(imagePath)
+        directory = imagePath.split(os.path.sep)[2]
+        processed = imagePath.split(os.path.sep)[-1]
+
+        checkpath = os.path.join(".", "Processed", directory, )
+        if not os.path.exists(checkpath):
+            os.makedirs(checkpath)
+
+        new_file = os.path.join(".", "Processed", directory, processed.split('.')[0] + ".jpg")
+        rgb_im = image_to_convert.convert('RGB')
+        rgb_im.save(new_file)
+        # print("file processed and saved as" + new_file)
+    finish = time.perf_counter()
+    print_perf("[PERF] Processing images", start, finish)
+
+
+def extract_embeddings(local_processed_path):
+    local_embeddings = []
+    persons = []
+    cropped_images = []
+    names = []
+
+    for (i, imagePath) in enumerate(local_processed_path):
+        # extract the person name from the image path
+        # print("[INFO] processing image {}/{}".format(i + 1, len(imagePaths)))
+        name = imagePath.split(os.path.sep)[-2]
 
         img = Image.open(imagePath)
         names.append(name)
         # perform face detection on the image
+        face_start = time.perf_counter()
+
         cropped_images.append(mtcnn(img))
+
+        face_finish = time.perf_counter()
+        print_perf(f'[PERF] Face detection - {name}', face_start, face_finish)
+
+    extract_start = time.perf_counter()
+
+    # enqueue the detected faces for tensor extraction
     img_cropped = torch.stack(cropped_images).to(device)
-    embeddings = resnet(img_cropped).detach().cpu()
-    for (i, imagePath) in enumerate(imagePaths):
-        person.append([names[i], embeddings[i]])
+
+    # calculate tensors from faces
+    local_embeddings = resnet(img_cropped).detach().cpu()
+
+    for (i, imagePath) in enumerate(local_processed_path):
+        persons.append([names[i], local_embeddings[i]])
+
+    extract_finish = time.perf_counter()
+    print_perf("[PERF] Embedding extraction", extract_start, extract_finish)
+
+    return persons
 
 
-def extract_tensor_from_evaluation_file():
-    global embedding
-    convert_to_rgb(evaluation_file)
-    img_eval = Image.open(evaluation_file)
+def extract_tensor_from_file(file):
+    eval_ims = []
+    img_eval = Image.open(file)
     eval_ims.append(mtcnn(img_eval))
-    pre_recog = torch.stack(eval_ims).to(device)
-    embedding = resnet(pre_recog).detach().cpu()
+    container = torch.stack(eval_ims).to(device)
+    tensor = resnet(container).detach().cpu()
+    return tensor
+
 
 def extract_tensor_from_image(img):
     container = [mtcnn(img)]
@@ -61,43 +103,55 @@ def extract_tensor_from_image(img):
     tensor = resnet(stacked).detach().cpu()
     return tensor
 
+
 def get_image_from_camera():
     vs = VideoStream(src=0).start()
     time.sleep(2.0)
     frame = vs.read()
     return frame
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-print('Running on device: {}'.format(device))
 
-mtcnn = MTCNN(
-    image_size=160, margin=0, min_face_size=20,
-    thresholds=[0.6, 0.7, 0.7], factor=0.709, post_process=True,
-    device=device
-)
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+print('[INFO] Running on device: {}'.format(device))
+
+mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20, thresholds=[0.6, 0.7, 0.7], factor=0.709, post_process=True,
+              device=device)
 resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
 
 imagePaths = list(path.list_images(".\\Dataset\\"))
+processed_path = list(path.list_images(".\\Processed\\"))
 evaluation_file = './Eval/test_1/test1.jpg'
+eval_folder = list(path.list_images(".\\Eval\\"))
 
-embeddings = []
-cropped_images = []
-person = []
-names = []
-eval_ims = []
-distances = []
 
-extract_embeddings()
 
-#extract_tensor_from_evaluation_file()
 
-frame = get_image_from_camera()
 
-embedding = extract_tensor_from_image(frame)
+convert_to_rgb_jpg(imagePaths)
 
-for item in person:
-    distances.append([item[0], (item[1] - embedding[0]).norm().item()])
+reference_data = extract_embeddings(processed_path)
 
-result = return_closest_tensor(distances)
-probability = (1 - (result[1] / 2)) * 100
-print("result: \n " + result[0] + ' ' + str(probability) + "%")
+eval_data = extract_embeddings(eval_folder)
+
+#embedding = extract_tensor_from_file(evaluation_file)
+
+#frame = get_image_from_camera()
+#embedding = extract_tensor_from_image(frame)
+distances_between_people = []
+for reference_item in reference_data:
+    for eval_item in eval_data:
+        names = ([reference_item[0], eval_item[0]])
+        distance = (reference_item[1] - eval_item[1]).norm().item()
+        distances_between_people.append([names, distance])
+
+for row in distances_between_people:
+    name1 = row[0][0]
+    name2 = row[0][1]
+    dist = row[1]
+    print(f'{name1};{name2};{dist}')
+
+
+result = return_closest_tensor(distances_between_people)
+conf = round((1 - (result[1] / 2)),2) * 100
+print(f'[RESULT] The smallest distance can be found between: "{result[0][0]}" and "{result[0][1]}" , with the distance of {round(result[1],2)}, equating to {conf}% confidence in recognition')
+
