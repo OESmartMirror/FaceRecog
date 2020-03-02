@@ -99,6 +99,7 @@ def Recognize(face):
                                      (96, 96), (0, 0, 0), swapRB=True, crop=False)
     embedder.setInput(faceBlob)
     vec = embedder.forward()
+    print(vec)
     # perform classification to recognize the face
     preds = recognizer.predict_proba(vec)[0]
     j = np.argmax(preds)

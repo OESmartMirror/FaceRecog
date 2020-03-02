@@ -7,6 +7,7 @@ from imutils.video import VideoStream
 import imutils
 import cv2
 import time
+import eel
 
 
 def print_perf(string, start, finish):
@@ -58,11 +59,14 @@ def extract_embeddings(local_processed_path):
         name = imagePath.split(os.path.sep)[-2]
 
         img = Image.open(imagePath)
-        names.append(name)
+
         # perform face detection on the image
         face_start = time.perf_counter()
 
-        cropped_images.append(mtcnn(img))
+        x = mtcnn(img)
+        if x is not None:
+            names.append(name)
+            cropped_images.append(x)
 
         face_finish = time.perf_counter()
         # print_perf(f'[PERF] Face detection - {name}', face_start, face_finish)
@@ -75,7 +79,7 @@ def extract_embeddings(local_processed_path):
     # calculate tensors from faces
     local_embeddings = resnet(img_cropped).detach().cpu()
 
-    for (i, imagePath) in enumerate(local_processed_path):
+    for (i, imagePath) in enumerate(local_embeddings):
         persons.append([names[i], local_embeddings[i]])
 
     extract_finish = time.perf_counter()
@@ -104,15 +108,17 @@ def extract_tensor_from_file(file):
 
 
 def extract_tensor_from_image(img):
-    container = [mtcnn(img)]
-    stacked = torch.stack(container).to(device)
-    tensor = resnet(stacked).detach().cpu()
-    return tensor
+    x = mtcnn(img)
+    if x is not None:
+        container = [x]
+        stacked = torch.stack(container).to(device)
+        tensor = resnet(stacked).detach().cpu()
+        return tensor
+    else:
+        return -1
 
 
-def get_image_from_camera():
-    vs = VideoStream(src=0).start()
-    time.sleep(2.0)
+def get_image_from_camera(vs):
     frame = vs.read()
     return frame
 
@@ -130,7 +136,37 @@ def convert_images_to_RGB_jpeg(path):
     conv_eval_finish = time.perf_counter()
     print_perf("[PERF] Processing evaluation images", conv_eval_start, conv_eval_finish)
 
+@eel.expose
+def loop_recog_for(num_of_frames):
+    eval_data.clear()
+    success = False
+    loopcounter = 0
+    while not success:
 
+        for i in range(num_of_frames):
+            frame = get_image_from_camera(vs)
+            tensor = extract_tensor_from_image(frame)
+            eval_data.append(['_', tensor])
+
+        distances_between_people = calculate_distances(reference_data, eval_data)
+
+        result = return_closest_tensor(distances_between_people)
+        conf = round((1 - (result[1] / 2)), 2) * 100
+        if result[1] > 1:
+
+            loopcounter += 1
+            time.sleep(0.5)
+
+            if loopcounter == 5:
+                print(f'[WARN] Recognition failed')
+                return -1
+        else:
+            print(f'[RESULT]  "{result[0][0]}"  {conf}% confidence')
+            # print(f'[RESULT]  "{result[0][0]}"  {result[1]}')
+            success = True
+            return [result[0][0]]
+
+vs = VideoStream(src=0).start()
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print('[INFO] Running on device: {}'.format(device))
 
@@ -150,21 +186,20 @@ new_eval_paths = list(path.list_images(".\\Eval\\"))
 
 
 reference_data = extract_embeddings(new_dataset_paths)
+eval_data = []
+#eval_data = extract_embeddings(new_eval_paths)
 
-eval_data = extract_embeddings(new_eval_paths)
+#frame = get_image_from_camera()
+#embedding = extract_tensor_from_image(frame)
+#for row in distances_between_people:
+#    name1 = row[0][0]
+#    name2 = row[0][1]
+#    dist = row[1]
+#    print(f'{name1};{name2};{dist}')
+print('starting eel')
+eel.init('web')
+eel.start('main.html')
 
-if True:
-    # frame = get_image_from_camera()
-    # embedding = extract_tensor_from_image(frame)
-    distances_between_people = calculate_distances(reference_data, eval_data)
-
-    for row in distances_between_people:
-        name1 = row[0][0]
-        name2 = row[0][1]
-        dist = row[1]
-        print(f'{name1};{name2};{dist}')
-
-    result = return_closest_tensor(distances_between_people)
-    conf = round((1 - (result[1] / 2)), 2) * 100
-    print(
-        f'[RESULT] The smallest distance can be found between: "{result[0][0]}" and "{result[0][1]}" , with the distance of {round(result[1], 2)}, equating to {conf}% confidence in recognition')
+while True:
+    result = loop_recog_for(3)
+    time.sleep(3)

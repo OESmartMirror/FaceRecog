@@ -13,11 +13,18 @@
 
         eel.expose(DisplayUser);
         async function DisplayUser() {
-            let user = await eel.loop_recog_for(10)();
-            document.getElementById("User").innerHTML = user;
+            let user = await eel.loop_recog_for(3)();
+            if (user == -1){
+                document.getElementById("User").innerHTML = "";
+                document.getElementById("cell-2").style.display = "none";
+            }else{
+                document.getElementById("User").innerHTML = user;
+                document.getElementById("cell-2").style.display = "block";
+            }
+
             }
         var myVar = setInterval(myTimer, 1000);
-        var recog_timer = setInterval(DisplayUser, 10000)
+        var recog_timer = setInterval(DisplayUser, 5000)
 
         function myTimer() {
             var d = new Date();
