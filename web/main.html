@@ -16,26 +16,31 @@
             let user = await eel.loop_recog_for(3)();
             if (user == -1){
                 document.getElementById("User").innerHTML = "";
-                document.getElementById("cell-2").style.display = "none";
+                document.getElementById("cell-3").style.display = "none";
+                document.getElementById("cell-5").style.display = "none";
             }else{
-                document.getElementById("User").innerHTML = user;
-                document.getElementById("cell-2").style.display = "block";
+
+                document.getElementById("User").innerHTML = "Welcome, " + user;
+                document.getElementById("cell-3").style.display = "block";
+                document.getElementById("cell-5").style.display = "block";
             }
 
             }
-        var myVar = setInterval(myTimer, 1000);
-        var recog_timer = setInterval(DisplayUser, 5000)
+
+
+        const myVar = setInterval(myTimer, 1000);
+        const recog_timer = setInterval(DisplayUser, 5000);
 
         function myTimer() {
-            var d = new Date();
-             document.getElementById("Clock").innerHTML = d.toLocaleTimeString();
+            let d = new Date();
+            document.getElementById("Clock").innerHTML = d.toLocaleTimeString();
         }
 
 
     </script>
 </head>
 <body class="bg-dark">
-    <div class="container-fluid">
+    <div class="container-fluid" >
 
         <div id="row-0" class="row">
 
@@ -43,7 +48,6 @@
 
             <div id="cell-0" class="col-lg-4">
                 <p id="User" class="user"></p>
-                <p id="Clock" class="time"></p>
                 <script type="text/javascript">
                        DisplayUser();
                 </script>
@@ -52,17 +56,13 @@
 
 
             <div id="cell-1" class="col-lg-4">
-
+                <p id="Clock" class="time"></p>
             </div>
 
 
 
             <div id="cell-2" class="col-lg-4">
-                <script type='text/javascript'
-                    src='https://darksky.net/widget/default/47.19112696899816,18.424762578125/ca12/en.js?width=100%&height=350&title=Székesfehérvár,
-                    Fejér &textColor=ffffff&bgColor=000000&transparency=false&skyColor=undefined&fontFamily=Default&customFont=&units=ca
-                    &htColor=ffffff&ltColor=cecece&displaySum=yes&displayHeader=yes'>
-                </script>
+
             </div>
 
 
@@ -75,6 +75,28 @@
 
 
             <div id="cell-3" class="col-lg-4">
+                <h2>Today's Events</h2>
+                <table id="eventTable">
+                <thead>
+                    <th>Time</th>
+                    <th>Event</th>
+                    <th>Location</th>
+                </thead>
+                <tbody id="events">
+                <tr class="now">
+                    <td>9:30-11:30</td>
+                    <td>Meeting</td>
+                    <td>Germany</td>
+                </tr>
+                </tbody>
+                </table>
+
+                <script src=".\scripts\script.js"></script>
+                <script>
+                var timerId = setInterval(() => {
+                    EventUpdate();
+                }, 10000);
+                </script>
 
             </div>
 
@@ -87,6 +109,11 @@
 
 
             <div id="cell-5" class="col-lg-4">
+                <script type='text/javascript'
+                    src='https://darksky.net/widget/default/47.19112696899816,18.424762578125/ca12/en.js?width=100%&height=350&title=Székesfehérvár,
+                    Fejér &textColor=ffffff&bgColor=000000&transparency=false&skyColor=undefined&fontFamily=Default&customFont=&units=ca
+                    &htColor=ffffff&ltColor=cecece&displaySum=yes&displayHeader=yes'>
+                </script>
 
             </div>
 
@@ -114,6 +141,9 @@
 
             <div id="cell-8" class="col-lg-4">
 
+                <div id="qrcode">
+
+                </div>
             </div>
 
 

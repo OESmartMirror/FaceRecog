@@ -1,3 +1,5 @@
+import io
+from base64 import b64encode
 import torch
 import path
 import os
@@ -8,6 +10,7 @@ import imutils
 import cv2
 import time
 import eel
+import pyqrcode
 
 
 def print_perf(string, start, finish):
@@ -137,6 +140,15 @@ def convert_images_to_RGB_jpeg(path):
     print_perf("[PERF] Processing evaluation images", conv_eval_start, conv_eval_finish)
 
 @eel.expose
+def generate_setup_qr_code():
+    img = pyqrcode.create('https://SmartMirror.net/setup')
+    buffers = io.BytesIO()
+    img.png(buffers, scale=8)
+    encoded = b64encode(buffers.getvalue()).decode("ascii")
+    return "data:image/png;base64, " + encoded
+
+
+@eel.expose
 def loop_recog_for(num_of_frames):
     eval_data.clear()
     success = False
@@ -152,10 +164,10 @@ def loop_recog_for(num_of_frames):
 
         result = return_closest_tensor(distances_between_people)
         conf = round((1 - (result[1] / 2)), 2) * 100
-        if result[1] > 1:
+        if conf < 60:
 
             loopcounter += 1
-            time.sleep(0.5)
+            eel.sleep(0.5)
 
             if loopcounter == 5:
                 print(f'[WARN] Recognition failed')
@@ -202,4 +214,4 @@ eel.start('main.html')
 
 while True:
     result = loop_recog_for(3)
-    time.sleep(3)
+    eel.sleep(3)
