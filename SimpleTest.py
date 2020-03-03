@@ -11,17 +11,19 @@ import cv2
 import time
 import eel
 import pyqrcode
+import random
 
 
 def print_perf(string, start, finish):
     print(f'{string} : took {round((finish - start), 2)} seconds')
 
 
-def return_closest_tensor(collection):
+def get_min_distance(collection):
     if not collection:
         raise ValueError('empty input')
 
     min_dist = collection[0]
+
 
     for item in collection:
         if item[1] < min_dist[1]:
@@ -95,9 +97,10 @@ def calculate_distances(reference, evaluation):
     distances = []
     for reference_item in reference:
         for eval_item in evaluation:
+            eval_item_tensor = eval_item[1]
             names = ([reference_item[0], eval_item[0]])
-            distance = (reference_item[1] - eval_item[1]).norm().item()
-            distances.append([names, distance])
+            distance = (reference_item[1] - eval_item_tensor).norm().item()
+            distances.append([names, distance, eval_item_tensor])
     return distances
 
 
@@ -162,7 +165,9 @@ def loop_recog_for(num_of_frames):
 
         distances_between_people = calculate_distances(reference_data, eval_data)
 
-        result = return_closest_tensor(distances_between_people)
+        result = get_min_distance(distances_between_people)
+        recognized_name = result[0][0]
+        recognized_tensor = result[2]
         conf = round((1 - (result[1] / 2)), 2) * 100
         if conf < 60:
 
@@ -173,10 +178,13 @@ def loop_recog_for(num_of_frames):
                 print(f'[WARN] Recognition failed')
                 return -1
         else:
-            print(f'[RESULT]  "{result[0][0]}"  {conf}% confidence')
+            print(f'[RESULT]  "{recognized_name}"  {conf}% confidence')
             # print(f'[RESULT]  "{result[0][0]}"  {result[1]}')
             success = True
-            return [result[0][0]]
+            if 72 < conf < 90 and random.randint(1, 3) == 2:
+                reference_data.append([recognized_name, recognized_tensor])
+                print("[INFO] Face added to references")
+            return [recognized_name]
 
 vs = VideoStream(src=0).start()
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
