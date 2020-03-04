@@ -156,7 +156,7 @@ def write_to_json(collection):
         json.dump(collection, file, ensure_ascii=False, indent=4)
 
 
-def convert_images_to_RGB_jpeg(path):
+def convert_images_to_RGB_jpeg(path, type):
     conv_eval_start = time.perf_counter()
     for (i, file_ref_path) in enumerate(path):
         old_file_path = file_ref_path
@@ -167,7 +167,7 @@ def convert_images_to_RGB_jpeg(path):
         if not old_file_path == new_file_path:
             os.remove(file_ref_path)
     conv_eval_finish = time.perf_counter()
-    print_perf("[PERF] Processing evaluation images", conv_eval_start, conv_eval_finish)
+    print_perf(f'[PERF] Processing {type} images', conv_eval_start, conv_eval_finish)
 
 @eel.expose
 def generate_setup_qr_code():
@@ -221,19 +221,41 @@ mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20, thresholds=[0.6, 0.7, 
               device=device)
 resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
 
+
+dataset_sate = []
 reference_data = []
+eval_data = []
 pickled_dataset_path = './dataset.pickle'
+pickled_data_state_path = 'data_state.pickle'
 dataset_paths = list(path.list_images(".\\Dataset\\"))
 eval_paths = list(path.list_images(".\\Eval\\"))
 
+if os.path.isfile(pickled_data_state_path):
+    data_sate = read_collection_from_pickle(pickled_data_state_path)
+else:
+    data_sate = dataset_paths
 
 if os.path.isfile(pickled_dataset_path):
+
+    if not data_sate == dataset_paths:
+        convert_images_to_RGB_jpeg(dataset_paths, 'dataset')
+        new_dataset_paths = list(path.list_images(".\\Dataset\\"))
+        reference_data = extract_embeddings(new_dataset_paths)
+        write_collection_to_pickle(reference_data, pickled_dataset_path)
+        data_sate = new_dataset_paths
+
+    write_collection_to_pickle(data_sate, pickled_data_state_path)
+
     reference_data = read_collection_from_pickle(pickled_dataset_path)
+
 else:
-    convert_images_to_RGB_jpeg(dataset_paths)
+    convert_images_to_RGB_jpeg(dataset_paths, 'dataset')
     new_dataset_paths = list(path.list_images(".\\Dataset\\"))
     reference_data = extract_embeddings(new_dataset_paths)
     write_collection_to_pickle(reference_data, pickled_dataset_path)
+    data_sate = new_dataset_paths
+    write_collection_to_pickle(data_sate, pickled_data_state_path)
+    #pickle.dump(dataset_sate, dataset_sate)
 
 
 #convert_images_to_RGB_jpeg(dataset_paths)
@@ -247,7 +269,7 @@ else:
 
 
 
-eval_data = []
+
 #eval_data = extract_embeddings(new_eval_paths)
 
 #frame = get_image_from_camera()
