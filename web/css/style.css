@@ -39,5 +39,7 @@ tr:nth-child(even) {
 .black{
   background-color: #00000f;
 }
-
+div{
+  transition: opacity 1s;
+}
 

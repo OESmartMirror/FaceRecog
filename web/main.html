@@ -17,14 +17,16 @@
         async function DisplayUser() {
             let user = await eel.loop_recog_for(3)();
             if (user == -1){
+                document.getElementById("User").style.opacity = 0;
                 document.getElementById("User").innerHTML = "";
-                document.getElementById("cell-3").style.display = "none";
-                document.getElementById("cell-5").style.display = "none";
+                document.getElementById("cell-3").style.opacity = 0;
+                document.getElementById("cell-5").style.opacity = 0;
             }else{
 
                 document.getElementById("User").innerHTML = "Welcome, " + user;
-                document.getElementById("cell-3").style.display = "block";
-                document.getElementById("cell-5").style.display = "block";
+                document.getElementById("User").style.opacity = 1
+                document.getElementById("cell-3").style.opacity = 1;
+                document.getElementById("cell-5").style.opacity = 1;
             }
 
             }

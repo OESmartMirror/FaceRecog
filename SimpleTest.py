@@ -12,7 +12,26 @@ import time
 import eel
 import pyqrcode
 import random
+import json
+import pickle
 
+
+def write_collection_to_pickle(collection, filename):
+    if not collection:
+        raise ValueError('[ERROR] write_collection_to_pickle : empty input')
+
+    with open(filename, 'wb',) as file:
+        pickle.dump(collection, file, protocol=4, fix_imports=True)
+
+
+def read_collection_from_pickle(filename):
+    if not filename:
+        print("[ERROR] read_collection_from_pickle : no input")
+    print(f'[INFO] Deserializing file: {filename}')
+    infile = open(filename, 'rb')
+    new_dict = pickle.load(infile)
+    infile.close()
+    return new_dict
 
 def print_perf(string, start, finish):
     print(f'{string} : took {round((finish - start), 2)} seconds')
@@ -129,6 +148,14 @@ def get_image_from_camera(vs):
     return frame
 
 
+def write_to_json(collection):
+    if not collection:
+        raise ValueError('empty input')
+
+    with open('dataset.json', 'w', encoding='utf-8') as file:
+        json.dump(collection, file, ensure_ascii=False, indent=4)
+
+
 def convert_images_to_RGB_jpeg(path):
     conv_eval_start = time.perf_counter()
     for (i, file_ref_path) in enumerate(path):
@@ -175,7 +202,7 @@ def loop_recog_for(num_of_frames):
             eel.sleep(0.5)
 
             if loopcounter == 5:
-                print(f'[WARN] Recognition failed')
+                print(f'[INFO] No user seen')
                 return -1
         else:
             print(f'[RESULT]  "{recognized_name}"  {conf}% confidence')
@@ -194,18 +221,32 @@ mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20, thresholds=[0.6, 0.7, 
               device=device)
 resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
 
+reference_data = []
+pickled_dataset_path = './dataset.pickle'
 dataset_paths = list(path.list_images(".\\Dataset\\"))
 eval_paths = list(path.list_images(".\\Eval\\"))
 
 
-convert_images_to_RGB_jpeg(dataset_paths)
-convert_images_to_RGB_jpeg(eval_paths)
+if os.path.isfile(pickled_dataset_path):
+    reference_data = read_collection_from_pickle(pickled_dataset_path)
+else:
+    convert_images_to_RGB_jpeg(dataset_paths)
+    new_dataset_paths = list(path.list_images(".\\Dataset\\"))
+    reference_data = extract_embeddings(new_dataset_paths)
+    write_collection_to_pickle(reference_data, pickled_dataset_path)
 
-new_dataset_paths = list(path.list_images(".\\Dataset\\"))
-new_eval_paths = list(path.list_images(".\\Eval\\"))
+
+#convert_images_to_RGB_jpeg(dataset_paths)
+#convert_images_to_RGB_jpeg(eval_paths)
+
+#new_dataset_paths = list(path.list_images(".\\Dataset\\"))
+#new_eval_paths = list(path.list_images(".\\Eval\\"))
 
 
-reference_data = extract_embeddings(new_dataset_paths)
+
+
+
+
 eval_data = []
 #eval_data = extract_embeddings(new_eval_paths)
 
