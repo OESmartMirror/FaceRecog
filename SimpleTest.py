@@ -235,27 +235,30 @@ if os.path.isfile(pickled_data_state_path):
 else:
     data_sate = dataset_paths
 
-if os.path.isfile(pickled_dataset_path):
 
-    if not data_sate == dataset_paths:
-        convert_images_to_RGB_jpeg(dataset_paths, 'dataset')
-        new_dataset_paths = list(path.list_images(".\\Dataset\\"))
-        reference_data = extract_embeddings(new_dataset_paths)
-        write_collection_to_pickle(reference_data, pickled_dataset_path)
-        data_sate = new_dataset_paths
-
-    write_collection_to_pickle(data_sate, pickled_data_state_path)
-
-    reference_data = read_collection_from_pickle(pickled_dataset_path)
-
-else:
+def process_dataset_images():
+    global new_dataset_paths, reference_data, data_sate
     convert_images_to_RGB_jpeg(dataset_paths, 'dataset')
     new_dataset_paths = list(path.list_images(".\\Dataset\\"))
     reference_data = extract_embeddings(new_dataset_paths)
-    write_collection_to_pickle(reference_data, pickled_dataset_path)
     data_sate = new_dataset_paths
+
+
+if os.path.isfile(pickled_dataset_path):
+
+    if not data_sate == dataset_paths:
+
+        process_dataset_images()
+        write_collection_to_pickle(reference_data, pickled_dataset_path)
+
     write_collection_to_pickle(data_sate, pickled_data_state_path)
-    #pickle.dump(dataset_sate, dataset_sate)
+    reference_data = read_collection_from_pickle(pickled_dataset_path)
+
+else:
+    process_dataset_images()
+
+    write_collection_to_pickle(reference_data, pickled_dataset_path)
+    write_collection_to_pickle(data_sate, pickled_data_state_path)
 
 
 #convert_images_to_RGB_jpeg(dataset_paths)
