@@ -17,7 +17,7 @@
         eel.expose(DisplayUser);
         async function DisplayUser() {
             document.getElementById('loading').style.opacity = 1;
-            let user = await eel.loop_recog_for(1)();
+            let user = await eel.loop_recog_for(3)();
             if (user == -1){
                 document.getElementById("User").style.opacity = 0;
                 document.getElementById("cell-3").style.opacity = 0;

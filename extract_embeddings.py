@@ -45,7 +45,7 @@ print(imagePaths)
 # corresponding people names
 knownEmbeddings = []
 knownNames = []
-
+data_usable = []
 # initialize the total number of faces processed
 total = 0
 
@@ -109,11 +109,19 @@ for (i, imagePath) in enumerate(imagePaths):
 			# embedding to their respective lists
 			knownNames.append(name)
 			knownEmbeddings.append(vec.flatten())
+			data_usable.append([name, vec.flatten()])
 			total += 1
 
 # dump the facial embeddings + names to disk
 print("[INFO] serializing {} encodings...".format(total))
 data = {"embeddings": knownEmbeddings, "names": knownNames}
+
+
+print(data_usable)
+file = open('output/embeddings2.pickle', 'wb')
+pickle.dump(data_usable, file)
+file.close()
+
 f = open(args["embeddings"], "wb")
 f.write(pickle.dumps(data))
 f.close()

@@ -1,6 +1,8 @@
 import io
 from base64 import b64encode
 import torch
+import pandas as pd
+
 import path
 import os
 from facenet_pytorch import MTCNN, InceptionResnetV1
@@ -14,6 +16,7 @@ import pyqrcode
 import random
 import json
 import pickle
+import numpy as np
 
 
 def write_collection_to_pickle(collection, filename):
@@ -48,6 +51,26 @@ def get_min_distance(collection):
         if item[1] < min_dist[1]:
             min_dist = item
     return min_dist
+
+
+def get_min_distance_of(collection):
+    min_dist = collection[0]
+
+
+    for item in collection:
+
+        if item[1] < min_dist[1]:
+            min_dist = item
+    return min_dist
+
+
+def sort_based_on_distance(collection):
+    if not collection:
+        raise ValueError('empty input')
+    sorted = collection.sort(key=lambda x: x[1])
+    return sorted
+
+
 
 
 def convert_to_rgb_jpg(imagePaths):
@@ -122,6 +145,17 @@ def calculate_distances(reference, evaluation):
             distances.append([names, distance, eval_item_tensor])
     return distances
 
+def calculate_distances_2(reference, evaluation):
+    distances = []
+    for reference_item in reference:
+        for eval_item in evaluation:
+            eval_item_tensor = eval_item[1]
+            name1 = reference_item[0]
+            name2 = eval_item[0]
+            distance = (reference_item[1] - eval_item_tensor).norm().item()
+            distances.append([name1, name2, distance])
+    return distances
+
 
 def extract_tensor_from_file(file):
     eval_ims = []
@@ -169,6 +203,14 @@ def convert_images_to_RGB_jpeg(path, type):
     conv_eval_finish = time.perf_counter()
     print_perf(f'[PERF] Processing {type} images', conv_eval_start, conv_eval_finish)
 
+
+def process_dataset_images():
+    global new_dataset_paths, reference_data, data_sate
+    convert_images_to_RGB_jpeg(dataset_paths, 'dataset')
+    new_dataset_paths = list(path.list_images(".\\Dataset\\"))
+    reference_data = extract_embeddings(new_dataset_paths)
+    data_sate = new_dataset_paths
+
 @eel.expose
 def generate_setup_qr_code():
     img = pyqrcode.create('https://SmartMirror.net/setup')
@@ -208,7 +250,7 @@ def loop_recog_for(num_of_frames):
             print(f'[RESULT]  "{recognized_name}"  {conf}% confidence')
             # print(f'[RESULT]  "{result[0][0]}"  {result[1]}')
             success = True
-            if 72 < conf < 90 and random.randint(1, 3) == 2:
+            if 68 < conf < 90 and random.randint(1, 3) == 2:
                 reference_data.append([recognized_name, recognized_tensor])
                 print("[INFO] Face added to references")
             return [recognized_name]
@@ -236,12 +278,7 @@ else:
     data_sate = dataset_paths
 
 
-def process_dataset_images():
-    global new_dataset_paths, reference_data, data_sate
-    convert_images_to_RGB_jpeg(dataset_paths, 'dataset')
-    new_dataset_paths = list(path.list_images(".\\Dataset\\"))
-    reference_data = extract_embeddings(new_dataset_paths)
-    data_sate = new_dataset_paths
+
 
 
 if os.path.isfile(pickled_dataset_path):
@@ -260,12 +297,36 @@ else:
     write_collection_to_pickle(reference_data, pickled_dataset_path)
     write_collection_to_pickle(data_sate, pickled_data_state_path)
 
+test_mode = True
+n_to_n_eval_mode = False
 
-#convert_images_to_RGB_jpeg(dataset_paths)
-#convert_images_to_RGB_jpeg(eval_paths)
+if test_mode:
+    filename = 'new_version_test_output.csv'
+    file = open(filename, 'w+')
 
-#new_dataset_paths = list(path.list_images(".\\Dataset\\"))
-#new_eval_paths = list(path.list_images(".\\Eval\\"))
+    if n_to_n_eval_mode:
+        distances_between_people = calculate_distances(reference_data, reference_data)
+        for row in distances_between_people:
+            name1 = row[0]
+            name2 = row[1]
+            dist = row[2]
+            file.write(f'{name1};{name2};{dist}\n')
+    else:
+        eval_data = extract_embeddings(eval_paths)
+        distances_between_people = calculate_distances_2(reference_data, eval_data)
+        dataframe = pd.DataFrame(distances_between_people)
+        df_sorted = dataframe.sort_values(2)
+        df_sorted = np.round(df_sorted, decimals=3)
+        df_sorted.to_csv(filename, sep=';', float_format=None, header=False, index=False)
+        print(df_sorted)
+        #file.write(dataframe)
+        #file.close()
+else:
+    #convert_images_to_RGB_jpeg(dataset_paths)
+    #convert_images_to_RGB_jpeg(eval_paths)
+
+    #new_dataset_paths = list(path.list_images(".\\Dataset\\"))
+    #new_eval_paths = list(path.list_images(".\\Eval\\"))
 
 
 
@@ -273,19 +334,15 @@ else:
 
 
 
-#eval_data = extract_embeddings(new_eval_paths)
+    #eval_data = extract_embeddings(new_eval_paths)
 
-#frame = get_image_from_camera()
-#embedding = extract_tensor_from_image(frame)
-#for row in distances_between_people:
-#    name1 = row[0][0]
-#    name2 = row[0][1]
-#    dist = row[1]
-#    print(f'{name1};{name2};{dist}')
-print('starting eel')
-eel.init('web')
-eel.start('main.html')
+    #frame = get_image_from_camera()
+    #embedding = extract_tensor_from_image(frame)
+    #
+    print('starting eel')
+    eel.init('web')
+    eel.start('main.html')
 
-while True:
-    result = loop_recog_for(3)
-    eel.sleep(3)
+    while True:
+        result = loop_recog_for(3)
+        eel.sleep(3)

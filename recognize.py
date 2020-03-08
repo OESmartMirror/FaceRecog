@@ -5,11 +5,14 @@
 #	--le output/le.pickle --image images/adrian.jpg
 
 # import the necessary packages
+import numpy
 import numpy as np
 import argparse
 import imutils
 import pickle
 import cv2
+import pandas as pd
+
 import path
 import os
 
@@ -50,14 +53,23 @@ detector = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
 print("[INFO] loading face recognizer...")
 embedder = cv2.dnn.readNetFromTorch(args["embedding_model"])
 
+old_embeddings_file = open('output/embeddings.pickle', 'rb')
+old_embeddings = pickle.load(old_embeddings_file)
+
+new_embedding_file = open('output/embeddings2.pickle', 'rb')
+new_embeddings = pickle.load(new_embedding_file)
+
+distances = []
+
 # load the actual face recognition model along with the label encoder
 recognizer = pickle.loads(open(args["recognizer"], "rb").read())
 le = pickle.loads(open(args["le"], "rb").read())
 
+
 # load the image, resize it to have a width of 600 pixels (while
 # maintaining the aspect ratio), and then grab the image dimensions
 
-imagePaths = list(path.list_images(".\\images\\"))
+imagePaths = list(path.list_images(".\\Dataset\\"))
 
 for (idx, imagePath) in enumerate(imagePaths):
     # extract the person name from the image path
@@ -111,6 +123,22 @@ for (idx, imagePath) in enumerate(imagePaths):
             vec = embedder.forward()
 
             # perform classification to recognize the face
+
+            for item in new_embeddings:
+                names = [item[0], pic_name]
+                distance = numpy.linalg.norm(item[1] - vec)
+                distances.append([names, distance])
+
+
+            #min_dist = distances[0]
+
+            #for item in distances:
+            #    if item[1] < min_dist[1]:
+            #         min_dist = item
+
+            #print(min_dist)
+
+
             preds = recognizer.predict_proba(vec)[0]
             j = np.argmax(preds)
             proba = preds[j]
@@ -126,3 +154,19 @@ for (idx, imagePath) in enumerate(imagePaths):
             # show the output image
             cv2.imshow("Image", image)
             cv2.waitKey(0)
+
+print(distances)
+filname = 'old_version_test_output.csv'
+file = open(filname, 'w+')
+df_distances = []
+
+for item in distances:
+    name1 = item[0][0]
+    name2 = item[0][1]
+    distance = item[1]
+    df_distances.append([name1,name2,distance])
+
+dataframe = pd.DataFrame(df_distances)
+df_sorted = dataframe.sort_values(2)
+df_sorted = np.round(df_sorted, decimals=3)
+df_sorted.to_csv(filname, sep=';', float_format=None, header=False, index=False)
