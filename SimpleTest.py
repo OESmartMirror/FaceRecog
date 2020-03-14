@@ -229,8 +229,27 @@ def loop_recog_for(num_of_frames):
 
         for i in range(num_of_frames):
             frame = get_image_from_camera(vs)
-            tensor = extract_tensor_from_image(frame)
-            eval_data.append(['_', tensor])
+            qr = read_qr(frame)
+            if qr is None:
+
+                tensor = extract_tensor_from_image(frame)
+                eval_data.append(['_', tensor])
+            else:
+                qr_success = False
+                string = str(qr)
+                inter = string.split("'")
+                qr_data = inter[1]
+                options = qr_data.split(':')
+                if options[0] == 'User':
+                    while not qr_success:
+                        frame = get_image_from_camera(vs)
+                        tensor = extract_tensor_from_image(frame)
+                        if tensor is not -1:
+                            reference_data.append([options[1], tensor])
+                            save_reference_embeddings()
+                            qr_success = True
+
+                return -1
 
         distances_between_people = calculate_distances(reference_data, eval_data)
 
@@ -252,17 +271,24 @@ def loop_recog_for(num_of_frames):
             success = True
             if 68 < conf < 90 and random.randint(1, 3) == 2:
                 reference_data.append([recognized_name, recognized_tensor])
+                save_reference_embeddings()
                 print("[INFO] Face added to references")
             return [recognized_name]
 
 
 def read_qr(frame):
-    qr_code = pyzbar.decode(frame)
-    if not qr_code:
-        return -1
-    else:
-        return qr_code
+    try:
+        qr_code = pyzbar.decode(frame)
+        for item in qr_code:
+            print(item.data)
+            return item.data
 
+    except:
+        return -1
+
+
+def save_reference_embeddings():
+    write_collection_to_pickle(reference_data,pickled_dataset_path)
 
 vs = VideoStream(src=0).start()
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -306,7 +332,7 @@ else:
     write_collection_to_pickle(reference_data, pickled_dataset_path)
     write_collection_to_pickle(data_sate, pickled_data_state_path)
 
-test_mode = True
+test_mode = False
 n_to_n_eval_mode = False
 
 if test_mode:
