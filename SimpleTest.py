@@ -109,10 +109,14 @@ def extract_embeddings(local_processed_path):
         # perform face detection on the image
         face_start = time.perf_counter()
 
-        x = mtcnn(img)
-        if x is not None:
-            names.append(name)
-            cropped_images.append(x)
+        try:
+            x = mtcnn(img)
+            if x is not None:
+                names.append(name)
+                cropped_images.append(x)
+        except:
+            print(f"something went wrong at image {i}, path: {imagePath}")
+
 
         face_finish = time.perf_counter()
         # print_perf(f'[PERF] Face detection - {name}', face_start, face_finish)
@@ -252,6 +256,15 @@ def process_dataset_images():
     reference_data = extract_embeddings(new_dataset_paths)
     data_sate = new_dataset_paths
 
+
+def process_eval_images():
+    global new_eval_paths, eval_data, eval_sate
+    convert_images_to_RGB_jpeg(eval_paths, 'evaluation')
+    new_eval_paths = list(path.list_images(".\\Eval\\"))
+    eval_data = extract_embeddings(new_eval_paths)
+    eval_sate = new_dataset_paths
+
+
 @eel.expose
 def generate_setup_qr_code():
     img = pyqrcode.create('https://SmartMirror.net/setup')
@@ -297,14 +310,14 @@ def recognize(num_of_frames):
                             reference_data.append([user, tensor])
                             save_reference_embeddings()
                             qr_success = True
-                            return [3, user]
+                            return [3, [user]]
 
                         if qr_loopcounter == 50:
                             # case: QR / Register / Fail
                             return [2, None]
 
                 elif options[0] == 'User':
-                    return [0, user]
+                    return [0, [user]]
 
                 return [-1, None]
 
@@ -338,9 +351,9 @@ def recognize(num_of_frames):
 def loop_recog_for(num_of_frames):
     recog_result = recognize(num_of_frames)
     exit_code = recog_result[0]
-    user = recog_result[1][0]
 
     if exit_code == 0 or exit_code == 3 or exit_code == 5:
+        user = recog_result[1][0]
         eel.ShowElements()
         return f'Welcome, {user}'
     if exit_code == 2:
@@ -373,12 +386,18 @@ mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20, thresholds=[0.6, 0.7, 
               device=device)
 resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
 
-
 dataset_sate = []
+eval_state = []
+
 reference_data = []
 eval_data = []
+
 pickled_dataset_path = './dataset.pickle'
 pickled_data_state_path = 'data_state.pickle'
+
+pickled_eval_path = './eval.pickle'
+pickled_eval_state_path = './eval_state.pickle'
+
 dataset_paths = list(path.list_images(".\\Dataset\\"))
 eval_paths = list(path.list_images(".\\Eval\\"))
 
@@ -387,8 +406,24 @@ if os.path.isfile(pickled_data_state_path):
 else:
     data_sate = dataset_paths
 
+if os.path.isfile(pickled_eval_state_path):
+    eval_state = read_collection_from_pickle(pickled_eval_state_path)
+else:
+    eval_state = eval_paths
 
+if os.path.isfile(pickled_eval_path):
 
+    if not eval_state == eval_paths:
+        process_eval_images()
+        write_collection_to_pickle(eval_data, pickled_eval_path)
+
+    write_collection_to_pickle(eval_state, pickled_data_state_path)
+    eval_data = read_collection_from_pickle(pickled_eval_path)
+
+else:
+    process_eval_images()
+    write_collection_to_pickle(eval_data, pickled_eval_path)
+    write_collection_to_pickle(eval_state, pickled_eval_state_path)
 
 
 if os.path.isfile(pickled_dataset_path):
@@ -407,7 +442,7 @@ else:
     write_collection_to_pickle(reference_data, pickled_dataset_path)
     write_collection_to_pickle(data_sate, pickled_data_state_path)
 
-test_mode = False
+test_mode = True
 n_to_n_eval_mode = False
 
 if test_mode:
@@ -422,7 +457,7 @@ if test_mode:
             dist = row[2]
             file.write(f'{name1};{name2};{dist}\n')
     else:
-        eval_data = extract_eval_embeddings(eval_paths)
+        eval_data = extract_embeddings(eval_paths)
         distances_between_people = calculate_distances_2(reference_data, eval_data)
         dataframe = pd.DataFrame(distances_between_people)
         df_sorted = dataframe.sort_values(2)
