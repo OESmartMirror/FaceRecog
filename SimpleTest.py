@@ -133,6 +133,47 @@ def extract_embeddings(local_processed_path):
 
     return persons
 
+def extract_eval_embeddings(local_processed_path):
+    local_embeddings = []
+    persons = []
+    cropped_images = []
+    names = []
+
+    for (i, imagePath) in enumerate(local_processed_path):
+        # extract the person name from the image path
+        # print("[INFO] processing image {}/{}".format(i + 1, len(local_processed_path)))
+        name = imagePath.split(os.path.sep)[-2]
+        pic_name = imagePath.split(os.path.sep)[-1]
+        img = Image.open(imagePath)
+
+        # perform face detection on the image
+        face_start = time.perf_counter()
+
+        x = mtcnn(img)
+        if x is not None:
+            names.append(pic_name)
+            cropped_images.append(x)
+
+        face_finish = time.perf_counter()
+        # print_perf(f'[PERF] Face detection - {name}', face_start, face_finish)
+
+    extract_start = time.perf_counter()
+
+    # enqueue the detected faces for tensor extraction
+    img_cropped = torch.stack(cropped_images).to(device)
+
+    # calculate tensors from faces
+    local_embeddings = resnet(img_cropped).detach().cpu()
+
+    for (i, imagePath) in enumerate(local_embeddings):
+        persons.append([names[i], local_embeddings[i]])
+
+    extract_finish = time.perf_counter()
+    print_perf("[PERF] Embedding extraction", extract_start, extract_finish)
+
+    return persons
+
+
 
 def calculate_distances(reference, evaluation):
     distances = []
@@ -220,18 +261,20 @@ def generate_setup_qr_code():
     return "data:image/png;base64, " + encoded
 
 
-@eel.expose
-def loop_recog_for(num_of_frames):
+def recognize(num_of_frames):
     eval_data.clear()
     success = False
     loopcounter = 0
+    qr_loopcounter = 0
     while not success:
 
         for i in range(num_of_frames):
-            frame = get_image_from_camera(vs)
-            qr = read_qr(frame)
-            if qr is None:
 
+            frame = get_image_from_camera(vs)
+
+            qr = read_qr(frame)
+
+            if qr is None:
                 tensor = extract_tensor_from_image(frame)
                 eval_data.append(['_', tensor])
             else:
@@ -240,16 +283,31 @@ def loop_recog_for(num_of_frames):
                 inter = string.split("'")
                 qr_data = inter[1]
                 options = qr_data.split(':')
-                if options[0] == 'User':
+                action = options[0]
+                user = options[1]
+
+                if action == 'Register':
                     while not qr_success:
+                        qr_loopcounter += 1
                         frame = get_image_from_camera(vs)
                         tensor = extract_tensor_from_image(frame)
+
                         if tensor is not -1:
-                            reference_data.append([options[1], tensor])
+                            # case: QR / Register / Success
+                            reference_data.append([user, tensor])
                             save_reference_embeddings()
                             qr_success = True
+                            return [3, user]
 
-                return -1
+                        if qr_loopcounter == 50:
+                            # case: QR / Register / Fail
+                            return [2, None]
+
+                elif options[0] == 'User':
+                    return [0, user]
+
+                return [-1, None]
+
 
         distances_between_people = calculate_distances(reference_data, eval_data)
 
@@ -264,7 +322,7 @@ def loop_recog_for(num_of_frames):
 
             if loopcounter == 5:
                 print(f'[INFO] No user seen')
-                return -1
+                return [4, None]
         else:
             print(f'[RESULT]  "{recognized_name}"  {conf}% confidence')
             # print(f'[RESULT]  "{result[0][0]}"  {result[1]}')
@@ -273,8 +331,25 @@ def loop_recog_for(num_of_frames):
                 reference_data.append([recognized_name, recognized_tensor])
                 save_reference_embeddings()
                 print("[INFO] Face added to references")
-            return [recognized_name]
+            return [5, [recognized_name]]
 
+
+@eel.expose
+def loop_recog_for(num_of_frames):
+    recog_result = recognize(num_of_frames)
+    exit_code = recog_result[0]
+    user = recog_result[1][0]
+
+    if exit_code == 0 or exit_code == 3 or exit_code == 5:
+        eel.ShowElements()
+        return f'Welcome, {user}'
+    if exit_code == 2:
+        return f'Failed to register user, please try again'
+    if exit_code == -1:
+        return f'Non-compliant QR code'
+    if exit_code == 4:
+        eel.HideElements()
+        return -1
 
 def read_qr(frame):
     try:
@@ -347,7 +422,7 @@ if test_mode:
             dist = row[2]
             file.write(f'{name1};{name2};{dist}\n')
     else:
-        eval_data = extract_embeddings(eval_paths)
+        eval_data = extract_eval_embeddings(eval_paths)
         distances_between_people = calculate_distances_2(reference_data, eval_data)
         dataframe = pd.DataFrame(distances_between_people)
         df_sorted = dataframe.sort_values(2)
