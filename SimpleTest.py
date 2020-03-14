@@ -13,6 +13,7 @@ import cv2
 import time
 import eel
 import pyqrcode
+import pyzbar.pyzbar as pyzbar
 import random
 import json
 import pickle
@@ -69,8 +70,6 @@ def sort_based_on_distance(collection):
         raise ValueError('empty input')
     sorted = collection.sort(key=lambda x: x[1])
     return sorted
-
-
 
 
 def convert_to_rgb_jpg(imagePaths):
@@ -144,6 +143,7 @@ def calculate_distances(reference, evaluation):
             distance = (reference_item[1] - eval_item_tensor).norm().item()
             distances.append([names, distance, eval_item_tensor])
     return distances
+
 
 def calculate_distances_2(reference, evaluation):
     distances = []
@@ -254,6 +254,15 @@ def loop_recog_for(num_of_frames):
                 reference_data.append([recognized_name, recognized_tensor])
                 print("[INFO] Face added to references")
             return [recognized_name]
+
+
+def read_qr(frame):
+    qr_code = pyzbar.decode(frame)
+    if not qr_code:
+        return -1
+    else:
+        return qr_code
+
 
 vs = VideoStream(src=0).start()
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')

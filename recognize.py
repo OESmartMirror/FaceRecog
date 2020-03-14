@@ -147,13 +147,13 @@ for (idx, imagePath) in enumerate(imagePaths):
             # draw the bounding box of the face along with the associated
             # probability
             text: str = "{}: {:.2f}% {}".format(name, proba * 100, pic_name)
-            print(text)
+            #print(text)
             y = startY - 10 if startY - 10 > 10 else startY + 10
             cv2.rectangle(image, (startX, startY), (endX, endY), (0, 0, 255), 2)
             cv2.putText(image, text, (startX, y),cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
             # show the output image
-            cv2.imshow("Image", image)
-            cv2.waitKey(0)
+            #cv2.imshow("Image", image)
+            #cv2.waitKey(0)
 
 print(distances)
 filname = 'old_version_test_output.csv'
