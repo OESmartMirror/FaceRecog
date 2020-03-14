@@ -134,7 +134,7 @@ for (i, imagePath) in enumerate(eval_paths):
 	# extract the person name from the image path
 	print("[INFO] processing image {}/{}".format(i + 1, len(datasetPaths)))
 	name = imagePath.split(os.path.sep)[-2]
-
+	pic_name = imagePath.split(os.path.sep)[-1]
 	# load the image, resize it to have a width of 600 pixels (while
 	# maintaining the aspect ratio), and then grab the image
 	# dimensions
@@ -188,7 +188,7 @@ for (i, imagePath) in enumerate(eval_paths):
 			# embedding to their respective lists
 			eval_known_names.append(name)
 			eval_embeddings.append(vec.flatten())
-			eval_collection.append([name, vec.flatten()])
+			eval_collection.append([pic_name, vec.flatten()])
 			total += 1
 
 file = open('output/eval_embeddings.pickle', 'wb')
