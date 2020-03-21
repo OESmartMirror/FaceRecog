@@ -24,7 +24,7 @@ def write_collection_to_pickle(collection, filename):
     if not collection:
         raise ValueError('[ERROR] write_collection_to_pickle : empty input')
 
-    with open(filename, 'wb',) as file:
+    with open(filename, 'wb', ) as file:
         pickle.dump(collection, file, protocol=4, fix_imports=True)
 
 
@@ -37,6 +37,7 @@ def read_collection_from_pickle(filename):
     infile.close()
     return new_dict
 
+
 def print_perf(string, start, finish):
     print(f'{string} : took {round((finish - start), 2)} seconds')
 
@@ -47,7 +48,6 @@ def get_min_distance(collection):
 
     min_dist = collection[0]
 
-
     for item in collection:
         if item[1] < min_dist[1]:
             min_dist = item
@@ -56,7 +56,6 @@ def get_min_distance(collection):
 
 def get_min_distance_of(collection):
     min_dist = collection[0]
-
 
     for item in collection:
 
@@ -117,7 +116,6 @@ def extract_embeddings(local_processed_path):
         except:
             print(f"something went wrong at image {i}, path: {imagePath}")
 
-
         face_finish = time.perf_counter()
         # print_perf(f'[PERF] Face detection - {name}', face_start, face_finish)
 
@@ -136,6 +134,7 @@ def extract_embeddings(local_processed_path):
     print_perf("[PERF] Embedding extraction", extract_start, extract_finish)
 
     return persons
+
 
 def extract_eval_embeddings(local_processed_path):
     local_embeddings = []
@@ -176,7 +175,6 @@ def extract_eval_embeddings(local_processed_path):
     print_perf("[PERF] Embedding extraction", extract_start, extract_finish)
 
     return persons
-
 
 
 def calculate_distances(reference, evaluation):
@@ -262,7 +260,7 @@ def process_eval_images():
     convert_images_to_RGB_jpeg(eval_paths, 'evaluation')
     new_eval_paths = list(path.list_images(".\\Eval\\"))
     eval_data = extract_embeddings(new_eval_paths)
-    eval_sate = new_dataset_paths
+    eval_sate = new_eval_paths
 
 
 @eel.expose
@@ -321,7 +319,6 @@ def recognize(num_of_frames):
 
                 return [-1, None]
 
-
         distances_between_people = calculate_distances(reference_data, eval_data)
 
         result = get_min_distance(distances_between_people)
@@ -340,11 +337,22 @@ def recognize(num_of_frames):
             print(f'[RESULT]  "{recognized_name}"  {conf}% confidence')
             # print(f'[RESULT]  "{result[0][0]}"  {result[1]}')
             success = True
-            if 68 < conf < 90 and random.randint(1, 3) == 2:
+            if 68 < conf < 90 and random.randint(1, 3) == 1:
                 reference_data.append([recognized_name, recognized_tensor])
-                save_reference_embeddings()
+
+                execute_func_with_probability(save_reference_embeddings, 25)
+
                 print("[INFO] Face added to references")
             return [5, [recognized_name]]
+
+
+def execute_func_with_probability(func, probability):
+    if not 0 < probability <= 100:
+        print("incorrect probability given")
+    else:
+        if random.randint(0, 100) <= probability:
+            func()
+
 
 
 @eel.expose
@@ -354,15 +362,14 @@ def loop_recog_for(num_of_frames):
 
     if exit_code == 0 or exit_code == 3 or exit_code == 5:
         user = recog_result[1][0]
-        eel.ShowElements()
         return f'Welcome, {user}'
     if exit_code == 2:
         return f'Failed to register user, please try again'
     if exit_code == -1:
         return f'Non-compliant QR code'
     if exit_code == 4:
-        eel.HideElements()
         return -1
+
 
 def read_qr(frame):
     try:
@@ -376,74 +383,104 @@ def read_qr(frame):
 
 
 def save_reference_embeddings():
-    write_collection_to_pickle(reference_data,pickled_dataset_path)
+    write_collection_to_pickle(reference_data, pickled_dataset_path)
 
-vs = VideoStream(src=0).start()
+
+def pre_flight_check():
+    global data_sate, eval_state, eval_data, reference_data
+    # if there's no saved data from previous runs, initialize data to current folder structure
+    if os.path.isfile(pickled_data_state_path):
+        data_sate = read_collection_from_pickle(pickled_data_state_path)
+    else:
+        data_sate = dataset_paths
+    if os.path.isfile(pickled_eval_state_path):
+        eval_state = read_collection_from_pickle(pickled_eval_state_path)
+    else:
+        eval_state = eval_paths
+    if os.path.isfile(pickled_eval_path):
+
+        if not eval_state == eval_paths:
+            # if changes were made to the images, re-process them
+            process_eval_images()
+            write_collection_to_pickle(eval_data, pickled_eval_path)
+
+        # Save the current state of images
+        write_collection_to_pickle(eval_state, pickled_eval_state_path)
+
+        # Fill operational data from previous saved state
+        eval_data = read_collection_from_pickle(pickled_eval_path)
+    else:
+        # In the case of missing pickle file, process images and create a new file to speed up consecutive runs
+        process_eval_images()
+        write_collection_to_pickle(eval_data, pickled_eval_path)
+        write_collection_to_pickle(eval_state, pickled_eval_state_path)
+    if os.path.isfile(pickled_dataset_path):
+
+        if not data_sate == dataset_paths:
+            process_dataset_images()
+            write_collection_to_pickle(reference_data, pickled_dataset_path)
+
+        write_collection_to_pickle(data_sate, pickled_data_state_path)
+        reference_data = read_collection_from_pickle(pickled_dataset_path)
+
+    else:
+        # In the case of missing pickle file, process images and create a new file to speed up consecutive runs
+        process_dataset_images()
+        write_collection_to_pickle(reference_data, pickled_dataset_path)
+        write_collection_to_pickle(data_sate, pickled_data_state_path)
+
+
+########## IMPLEMENT START ########
+
+# if test mode is enabled, UI will be disabled and
+# Eval images will be compared to Dataset images
+# instead of the normal Camera process.
+test_mode = True
+
+# if this option is enabled Dataset images will be compared against themselves, instead of Eval images.
+# This switch only takes effect if test_mode is enabled.
+n_to_n_eval_mode = False
+
+
+# Start the Camera if test mode is not enabled
+if not test_mode:
+    vs = VideoStream(src=0).start()
+
+# Init torch device
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print('[INFO] Running on device: {}'.format(device))
 
+# Initialize the Face Detection CNN
 mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20, thresholds=[0.6, 0.7, 0.7], factor=0.709, post_process=True,
               device=device)
+# Initialize the Face Recognition CNN
 resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
 
+# container for storing the list containing all the path strings in ./Dataset/*
 dataset_sate = []
+# Same as above, but for the ./Eval/* directory
 eval_state = []
 
+# container for storing the [label, Tensor] tuple calculated from images in the Dataset directory
 reference_data = []
+# same as above, but for the Eval directory
 eval_data = []
 
+# baked in path strings for serialized data
 pickled_dataset_path = './dataset.pickle'
-pickled_data_state_path = 'data_state.pickle'
-
+pickled_data_state_path = './data_state.pickle'
 pickled_eval_path = './eval.pickle'
 pickled_eval_state_path = './eval_state.pickle'
 
+# fill appropriate containers with current images in specified directories
 dataset_paths = list(path.list_images(".\\Dataset\\"))
 eval_paths = list(path.list_images(".\\Eval\\"))
 
-if os.path.isfile(pickled_data_state_path):
-    data_sate = read_collection_from_pickle(pickled_data_state_path)
-else:
-    data_sate = dataset_paths
-
-if os.path.isfile(pickled_eval_state_path):
-    eval_state = read_collection_from_pickle(pickled_eval_state_path)
-else:
-    eval_state = eval_paths
-
-if os.path.isfile(pickled_eval_path):
-
-    if not eval_state == eval_paths:
-        process_eval_images()
-        write_collection_to_pickle(eval_data, pickled_eval_path)
-
-    write_collection_to_pickle(eval_state, pickled_data_state_path)
-    eval_data = read_collection_from_pickle(pickled_eval_path)
-
-else:
-    process_eval_images()
-    write_collection_to_pickle(eval_data, pickled_eval_path)
-    write_collection_to_pickle(eval_state, pickled_eval_state_path)
+# check states from previous runs, and initialize operative data accordingly
+pre_flight_check()
 
 
-if os.path.isfile(pickled_dataset_path):
-
-    if not data_sate == dataset_paths:
-
-        process_dataset_images()
-        write_collection_to_pickle(reference_data, pickled_dataset_path)
-
-    write_collection_to_pickle(data_sate, pickled_data_state_path)
-    reference_data = read_collection_from_pickle(pickled_dataset_path)
-
-else:
-    process_dataset_images()
-
-    write_collection_to_pickle(reference_data, pickled_dataset_path)
-    write_collection_to_pickle(data_sate, pickled_data_state_path)
-
-test_mode = True
-n_to_n_eval_mode = False
+######## MAIN EXECUTIION #########
 
 if test_mode:
     filename = 'new_version_test_output.csv'
@@ -457,33 +494,15 @@ if test_mode:
             dist = row[2]
             file.write(f'{name1};{name2};{dist}\n')
     else:
-        eval_data = extract_embeddings(eval_paths)
+        eval_data = extract_eval_embeddings(eval_paths)
         distances_between_people = calculate_distances_2(reference_data, eval_data)
         dataframe = pd.DataFrame(distances_between_people)
         df_sorted = dataframe.sort_values(2)
         df_sorted = np.round(df_sorted, decimals=3)
         df_sorted.to_csv(filename, sep=';', float_format=None, header=False, index=False)
-        print(df_sorted)
-        #file.write(dataframe)
-        #file.close()
+
 else:
-    #convert_images_to_RGB_jpeg(dataset_paths)
-    #convert_images_to_RGB_jpeg(eval_paths)
 
-    #new_dataset_paths = list(path.list_images(".\\Dataset\\"))
-    #new_eval_paths = list(path.list_images(".\\Eval\\"))
-
-
-
-
-
-
-
-    #eval_data = extract_embeddings(new_eval_paths)
-
-    #frame = get_image_from_camera()
-    #embedding = extract_tensor_from_image(frame)
-    #
     print('starting eel')
     eel.init('web')
     eel.start('main.html')

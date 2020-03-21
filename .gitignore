@@ -1,17 +1,14 @@
 #OpenCV pictures..etc
-dataset/
-dataset_cropped/
-images/
-runs/
-venv/
-.idea/
+/Dataset/*
+Eval/*
 __pycache__/
 path.pycel
-Processed
-Eval
-venv
-.idea
+/venv/*
+/.idea/*
+/venv-1/*
+/dataset.pickle
+/eval.pickle
+/data_state.pickle
+/eval_state.pickle
 /Eval/
-/.idea/
-/Eval/
-/venv-1/
+/eval.pickle

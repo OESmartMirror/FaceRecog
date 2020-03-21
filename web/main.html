@@ -13,14 +13,19 @@
     <title>App</title>
     <script type="text/javascript" src="/eel.js"></script>
     <script type="text/javascript">
-        eel.expose(HideElements);
+
+
         function HideElements(){
             document.getElementById("User").style.opacity = 0;
             document.getElementById("cell-3").style.opacity = 0;
             document.getElementById("cell-5").style.opacity = 0;
         }
-        eel.expose(ShowElements);
-        function ShowElements(){
+
+
+        function ShowElement(id){
+            document.getElementById(id).style.opacity = 1;
+        }
+        function ShowAllElements(){
             document.getElementById("User").style.opacity = 1;
             document.getElementById("cell-3").style.opacity = 1;
             document.getElementById("cell-5").style.opacity = 1;
@@ -32,10 +37,20 @@
             document.getElementById('loading').style.opacity = 1;
             let result = await eel.loop_recog_for(3)();
             if (result == -1){
-                //HideElements();
+                document.getElementById("User").style.opacity = 0;
+                document.getElementById("cell-3").style.opacity = 0;
+                document.getElementById("cell-5").style.opacity = 0;
+            }
+            if (result == "Patrik"){
+                document.getElementById("User").style.opacity = 0;
+                document.getElementById("cell-3").style.opacity = 0;
+                document.getElementById("cell-5").style.opacity = 0;
             }else{
                 document.getElementById("User").innerHTML = result;
-                //ShowElements();
+                document.getElementById("User").style.opacity = 1;
+                document.getElementById("cell-3").style.opacity = 1;
+                document.getElementById("cell-5").style.opacity = 1;
+                document.getElementById('loading').style.opacity = 0;
             }
 
             }
@@ -62,7 +77,7 @@
             <div id="cell-0" class="align-self-center">
                 <p id="User" class="user"></p>
                 <script type="text/javascript">
-                       DisplayUser();
+                    DisplayUser();
                 </script>
             </div>
 
