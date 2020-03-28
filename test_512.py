@@ -6,13 +6,8 @@ import path
 import os
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image
-from imutils.video import VideoStream
 import time
-import eel
-import pyqrcode
-import pyzbar.pyzbar as pyzbar
 import random
-import json
 import pickle
 import numpy as np
 
@@ -138,7 +133,7 @@ def extract_eval_embeddings(local_processed_path):
     persons = []
     cropped_images = []
     names = []
-
+    extract_start = time.perf_counter()
     for (i, imagePath) in enumerate(local_processed_path):
         # extract the person name from the image path
         # print("[INFO] processing image {}/{}".format(i + 1, len(local_processed_path)))
@@ -157,7 +152,7 @@ def extract_eval_embeddings(local_processed_path):
         face_finish = time.perf_counter()
         # print_perf(f'[PERF] Face detection - {name}', face_start, face_finish)
 
-    extract_start = time.perf_counter()
+
 
     # enqueue the detected faces for tensor extraction
     img_cropped = torch.stack(cropped_images).to(device)
@@ -169,7 +164,7 @@ def extract_eval_embeddings(local_processed_path):
         persons.append([names[i], local_embeddings[i]])
 
     extract_finish = time.perf_counter()
-    print_perf("[PERF] Embedding extraction", extract_start, extract_finish)
+    print_perf("[PERF] Processing Eval images", extract_start, extract_finish)
 
     return persons
 
@@ -217,19 +212,6 @@ def extract_tensor_from_image(img):
         return -1
 
 
-def get_image_from_camera(vs):
-    frame = vs.read()
-    return frame
-
-
-def write_to_json(collection):
-    if not collection:
-        raise ValueError('empty input')
-
-    with open('dataset.json', 'w', encoding='utf-8') as file:
-        json.dump(collection, file, ensure_ascii=False, indent=4)
-
-
 def convert_images_to_RGB_jpeg(path, type):
     conv_eval_start = time.perf_counter()
     for (i, file_ref_path) in enumerate(path):
@@ -245,102 +227,25 @@ def convert_images_to_RGB_jpeg(path, type):
 
 
 def process_dataset_images():
+    start_dataset = time.perf_counter()
     global new_dataset_paths, reference_data, data_sate
     convert_images_to_RGB_jpeg(dataset_paths, 'dataset')
     new_dataset_paths = list(path.list_images(".\\Dataset\\"))
     reference_data = extract_embeddings(new_dataset_paths)
     data_sate = new_dataset_paths
+    end_dataset = time.perf_counter()
+    print_perf('[PERF] Processing Dataset images', start_dataset, end_dataset)
 
 
 def process_eval_images():
+    start_eval = time.perf_counter()
     global new_eval_paths, eval_data, eval_sate
     convert_images_to_RGB_jpeg(eval_paths, 'evaluation')
     new_eval_paths = list(path.list_images(".\\Eval\\"))
     eval_data = extract_embeddings(new_eval_paths)
     eval_sate = new_eval_paths
-
-
-@eel.expose
-def generate_setup_qr_code():
-    img = pyqrcode.create('https://SmartMirror.net/setup')
-    buffers = io.BytesIO()
-    img.png(buffers, scale=8)
-    encoded = b64encode(buffers.getvalue()).decode("ascii")
-    return "data:image/png;base64, " + encoded
-
-
-def recognize(num_of_frames):
-    eval_data.clear()
-    success = False
-    loopcounter = 0
-    qr_loopcounter = 0
-    while not success:
-
-        for i in range(num_of_frames):
-
-            frame = get_image_from_camera(vs)
-
-            qr = read_qr(frame)
-
-            if qr is None:
-                tensor = extract_tensor_from_image(frame)
-                eval_data.append(['_', tensor])
-            else:
-                qr_success = False
-                string = str(qr)
-                inter = string.split("'")
-                qr_data = inter[1]
-                options = qr_data.split(':')
-                action = options[0]
-                user = options[1]
-
-                if action == 'Register':
-                    while not qr_success:
-                        qr_loopcounter += 1
-                        frame = get_image_from_camera(vs)
-                        tensor = extract_tensor_from_image(frame)
-
-                        if tensor is not -1:
-                            # case: QR / Register / Success
-                            reference_data.append([user, tensor])
-                            save_reference_embeddings()
-                            qr_success = True
-                            return [3, [user]]
-
-                        if qr_loopcounter == 50:
-                            # case: QR / Register / Fail
-                            return [2, None]
-
-                elif options[0] == 'User':
-                    return [0, [user]]
-
-                return [-1, None]
-
-        distances_between_people = calculate_distances(reference_data, eval_data)
-
-        result = get_min_distance(distances_between_people)
-        recognized_name = result[0][0]
-        recognized_tensor = result[2]
-        conf = round((1 - (result[1] / 2)), 2) * 100
-        if conf < 60:
-
-            loopcounter += 1
-            eel.sleep(0.5)
-
-            if loopcounter == 5:
-                print(f'[INFO] No user seen')
-                return [4, None]
-        else:
-            print(f'[RESULT]  "{recognized_name}"  {conf}% confidence')
-            # print(f'[RESULT]  "{result[0][0]}"  {result[1]}')
-            success = True
-            if 68 < conf < 90 and random.randint(1, 3) == 1:
-                reference_data.append([recognized_name, recognized_tensor])
-
-                execute_func_with_probability(save_reference_embeddings, 25)
-
-                print("[INFO] Face added to references")
-            return [5, [recognized_name]]
+    end_eval = time.perf_counter()
+    print_perf('[PERF] Processing Eval images', start_eval, end_eval)
 
 
 def execute_func_with_probability(func, probability):
@@ -350,33 +255,6 @@ def execute_func_with_probability(func, probability):
         if random.randint(0, 100) <= probability:
             func()
 
-
-
-@eel.expose
-def loop_recog_for(num_of_frames):
-    recog_result = recognize(num_of_frames)
-    exit_code = recog_result[0]
-
-    if exit_code == 0 or exit_code == 3 or exit_code == 5:
-        user = recog_result[1][0]
-        return f'Welcome, {user}'
-    if exit_code == 2:
-        return f'Failed to register user, please try again'
-    if exit_code == -1:
-        return f'Non-compliant QR code'
-    if exit_code == 4:
-        return -1
-
-
-def read_qr(frame):
-    try:
-        qr_code = pyzbar.decode(frame)
-        for item in qr_code:
-            print(item.data)
-            return item.data
-
-    except:
-        return -1
 
 
 def save_reference_embeddings():
@@ -427,25 +305,9 @@ def pre_flight_check():
         write_collection_to_pickle(data_sate, pickled_data_state_path)
 
 
-########## IMPLEMENT START ########
-
-# if test mode is enabled, UI will be disabled and
-# Eval images will be compared to Dataset images
-# instead of the normal Camera process.
-test_mode = True
-
-# if this option is enabled Dataset images will be compared against themselves, instead of Eval images.
-# This switch only takes effect if test_mode is enabled.
 n_to_n_eval_mode = False
 
-
-# Start the Camera if test mode is not enabled
-if not test_mode:
-    vs = VideoStream(src=0).start()
-
-# Init torch device
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-print('[INFO] Running on device: {}'.format(device))
 
 # Initialize the Face Detection CNN
 mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20, thresholds=[0.6, 0.7, 0.7], factor=0.709, post_process=True,
@@ -477,33 +339,32 @@ eval_paths = list(path.list_images(".\\Eval\\"))
 pre_flight_check()
 
 
-######## MAIN EXECUTIION #########
+filename = 'test_512_output.csv'
 
-if test_mode:
-    filename = 'new_version_test_output.csv'
+start_all = time.perf_counter()
+if n_to_n_eval_mode:
     file = open(filename, 'w+')
-
-    if n_to_n_eval_mode:
-        distances_between_people = calculate_distances(reference_data, reference_data)
-        for row in distances_between_people:
-            name1 = row[0]
-            name2 = row[1]
-            dist = row[2]
-            file.write(f'{name1};{name2};{dist}\n')
-    else:
-        eval_data = extract_eval_embeddings(eval_paths)
-        distances_between_people = calculate_distances_2(reference_data, eval_data)
-        dataframe = pd.DataFrame(distances_between_people)
-        df_sorted = dataframe.sort_values(2)
-        df_sorted = np.round(df_sorted, decimals=3)
-        df_sorted.to_csv(filename, sep=';', float_format=None, header=False, index=False)
-
+    distances_between_people = calculate_distances(reference_data, reference_data)
+    for row in distances_between_people:
+        name1 = row[0]
+        name2 = row[1]
+        dist = row[2]
+        file.write(f'{name1};{name2};{dist}\n')
+    file.close()
 else:
+    # process_eval_images()
+    distances_between_people = calculate_distances_2(reference_data, eval_data)
+    dataframe = pd.DataFrame(distances_between_people)
+    df_sorted = dataframe.sort_values(2)
+    df_sorted = np.round(df_sorted, decimals=3)
 
-    print('starting eel')
-    eel.init('web')
-    eel.start('main.html')
 
-    while True:
-        result = loop_recog_for(3)
-        eel.sleep(3)
+    print(f'[INFO] Writing to file: {filename}')
+    start = time.perf_counter()
+    df_sorted.to_csv(filename, sep=';', float_format=None, header=False, index=False)
+    end = time.perf_counter()
+    print_perf("[PERF] Writing to file", start, end)
+
+total = len(eval_data) + len(reference_data)
+end_all = time.perf_counter()
+print_perf(f'[PERF] Execution - {total}', start_all, end_all)
