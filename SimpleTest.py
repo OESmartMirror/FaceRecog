@@ -15,6 +15,8 @@ import random
 import json
 import pickle
 import numpy as np
+import requests
+
 
 
 def write_collection_to_pickle(collection, filename):
@@ -311,7 +313,7 @@ def recognize(num_of_frames):
                             # case: QR / Register / Fail
                             return [2, None]
 
-                elif options[0] == 'User':
+                elif action == 'User':
                     return [0, [user]]
 
                 return [-1, None]
@@ -479,6 +481,42 @@ pre_flight_check()
 
 ######## MAIN EXECUTIION #########
 
+def get_json_from_label(label):
+    url = 'http://cst04.ddns.net:56385/LookingGlass_war_exploded/query'
+    params = {'label': label}
+    r = requests.get(url=url, params=params)
+    r_json = (r.json())
+    return r_json
+
+
+def get_single_user_data_from_DB(label):
+
+    r_json = get_json_from_label(label)
+    recece = r_json["UsersParametersById"]
+
+    usermap = {}
+
+    for item in range(len(recece)):
+        paramname = recece[item]["ParameterName"]
+        paramval = recece[item]["ParameterValue"]
+        usermap[paramname] = paramval
+
+    return usermap
+
+def get_single_user_data_from_JSON(json):
+
+
+    recece = json["UsersParametersById"]
+
+    usermap = {}
+
+    for item in range(len(recece)):
+        paramname = recece[item]["ParameterName"]
+        paramval = recece[item]["ParameterValue"]
+        usermap[paramname] = paramval
+
+    return usermap
+
 if test_mode:
     filename = 'new_version_test_output.csv'
     file = open(filename, 'w+')
@@ -497,6 +535,33 @@ if test_mode:
         df_sorted = dataframe.sort_values(2)
         df_sorted = np.round(df_sorted, decimals=3)
         df_sorted.to_csv(filename, sep=';', float_format=None, header=False, index=False)
+
+        json_collection = []
+        for i in reference_data:
+            label = i[0]
+            serializable_tensor = i[1].cpu().numpy()
+            json_collection.append([label, serializable_tensor.tolist()])
+
+        #for i in eval_data:
+        #    if isinstance(eval_data[i][1], torch.Tensor):
+        #        eval_data[i][1] = eval_data[i][1].cpu().numpy()
+
+        write_to_json(json_collection)
+        json = get_json_from_label('')
+        map = get_single_user_data_from_DB('413916512')
+        print(map["firstName"])
+        print(json)
+        paramval = ''
+
+        for item in range(len(json)):
+            label = json[item]["Label"]
+            usermap = get_single_user_data_from_JSON(json[item])
+
+            print(f'{label} ; {usermap["firstName"]}')
+
+
+
+
 
 else:
 
