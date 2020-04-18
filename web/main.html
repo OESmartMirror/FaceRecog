@@ -32,10 +32,10 @@
             document.getElementById('loading').style.opacity = 1;
             let result = await eel.loop_recog_for(3)();
             if (result == -1){
-                //HideElements();
+                HideElements();
             }else{
                 document.getElementById("User").innerHTML = result;
-                //ShowElements();
+                ShowElements();
             }
 
             }

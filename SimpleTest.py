@@ -356,11 +356,14 @@ def execute_func_with_probability(func, probability):
 
 @eel.expose
 def loop_recog_for(num_of_frames):
+    global user_cache
     recog_result = recognize(num_of_frames)
     exit_code = recog_result[0]
 
     if exit_code == 0 or exit_code == 3 or exit_code == 5:
-        user = recog_result[1][0]
+        label = recog_result[1][0]
+
+        user = user_cache[label]
         return f'Welcome, {user}'
     if exit_code == 2:
         return f'Failed to register user, please try again'
@@ -383,6 +386,7 @@ def read_qr(frame):
 
 def save_reference_embeddings():
     write_collection_to_pickle(reference_data, pickled_dataset_path)
+    print("references saved to disk")
 
 
 def pre_flight_check():
@@ -429,12 +433,64 @@ def pre_flight_check():
         write_collection_to_pickle(data_sate, pickled_data_state_path)
 
 
+def get_json_from_label(label):
+    url = 'http://cst04.ddns.net:56385/LookingGlass_war_exploded/query'
+    params = {'label': label}
+    r = requests.get(url=url, params=params)
+    print(r)
+    r_json = (r.json())
+    return r_json
+
+
+def get_single_user_data_from_DB(label):
+
+    r_json = get_json_from_label(label)
+    recece = r_json["UsersParametersById"]
+
+    usermap = {}
+
+    for item in range(len(recece)):
+        paramname = recece[item]["ParameterName"]
+        paramval = recece[item]["ParameterValue"]
+        usermap[paramname] = paramval
+
+    return usermap
+
+def get_single_user_data_from_JSON(json):
+
+
+    recece = json["UsersParametersById"]
+
+    usermap = {}
+
+    for item in range(len(recece)):
+        paramname = recece[item]["ParameterName"]
+        paramval = recece[item]["ParameterValue"]
+        usermap[paramname] = paramval
+
+    return usermap
+
+def build_user_data_cache():
+    json = get_json_from_label("")
+
+    user_cache = {}
+
+    for item in range(len(json)):
+        label = json[item]["Label"]
+        usermap = get_single_user_data_from_JSON(json[item])
+        user_cache[label] = usermap["firstName"]
+
+        print(f'{label} ; {usermap["firstName"]}')
+
+    return user_cache
+
+
 ########## IMPLEMENT START ########
 
 # if test mode is enabled, UI will be disabled and
 # Eval images will be compared to Dataset images
 # instead of the normal Camera process.
-test_mode = True
+test_mode = False
 
 # if this option is enabled Dataset images will be compared against themselves, instead of Eval images.
 # This switch only takes effect if test_mode is enabled.
@@ -481,41 +537,7 @@ pre_flight_check()
 
 ######## MAIN EXECUTIION #########
 
-def get_json_from_label(label):
-    url = 'http://cst04.ddns.net:56385/LookingGlass_war_exploded/query'
-    params = {'label': label}
-    r = requests.get(url=url, params=params)
-    r_json = (r.json())
-    return r_json
 
-
-def get_single_user_data_from_DB(label):
-
-    r_json = get_json_from_label(label)
-    recece = r_json["UsersParametersById"]
-
-    usermap = {}
-
-    for item in range(len(recece)):
-        paramname = recece[item]["ParameterName"]
-        paramval = recece[item]["ParameterValue"]
-        usermap[paramname] = paramval
-
-    return usermap
-
-def get_single_user_data_from_JSON(json):
-
-
-    recece = json["UsersParametersById"]
-
-    usermap = {}
-
-    for item in range(len(recece)):
-        paramname = recece[item]["ParameterName"]
-        paramval = recece[item]["ParameterValue"]
-        usermap[paramname] = paramval
-
-    return usermap
 
 if test_mode:
     filename = 'new_version_test_output.csv'
@@ -547,24 +569,26 @@ if test_mode:
         #        eval_data[i][1] = eval_data[i][1].cpu().numpy()
 
         write_to_json(json_collection)
-        json = get_json_from_label('')
-        map = get_single_user_data_from_DB('413916512')
-        print(map["firstName"])
-        print(json)
-        paramval = ''
+#        json = get_json_from_label('')
+#        map = get_single_user_data_from_DB('413916512')
+#        print(map["firstName"])
+#        print(json)
+#        paramval = ''
 
-        for item in range(len(json)):
-            label = json[item]["Label"]
-            usermap = get_single_user_data_from_JSON(json[item])
+        #for item in range(len(json)):
+        #    label = json[item]["Label"]
+        #    usermap = get_single_user_data_from_JSON(json[item])
+#
+#            print(f'{label} ; {usermap["firstName"]}')
 
-            print(f'{label} ; {usermap["firstName"]}')
+
 
 
 
 
 
 else:
-
+    user_cache = build_user_data_cache()
     print('starting eel')
     eel.init('web')
     eel.start('main.html')
