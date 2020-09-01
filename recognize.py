@@ -19,8 +19,6 @@ import os
 from PIL import Image
 
 
-
-
 def convert_to_rgb(imagePath):
     image_to_convert = Image.open(imagePath)
     rgb_im = image_to_convert.convert('RGB')

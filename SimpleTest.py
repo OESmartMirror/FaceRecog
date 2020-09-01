@@ -20,6 +20,8 @@ import pickle
 import numpy as np
 
 
+
+
 def write_collection_to_pickle(collection, filename):
     if not collection:
         raise ValueError('[ERROR] write_collection_to_pickle : empty input')
@@ -249,7 +251,7 @@ def convert_images_to_RGB_jpeg(path, type):
 
 def process_dataset_images():
     global new_dataset_paths, reference_data, data_sate
-    convert_images_to_RGB_jpeg(dataset_paths, 'dataset')
+    #convert_images_to_RGB_jpeg(dataset_paths, 'dataset')
     new_dataset_paths = list(path.list_images(".\\Dataset\\"))
     reference_data = extract_embeddings(new_dataset_paths)
     data_sate = new_dataset_paths
@@ -257,7 +259,7 @@ def process_dataset_images():
 
 def process_eval_images():
     global new_eval_paths, eval_data, eval_sate
-    convert_images_to_RGB_jpeg(eval_paths, 'evaluation')
+    #convert_images_to_RGB_jpeg(eval_paths, 'evaluation')
     new_eval_paths = list(path.list_images(".\\Eval\\"))
     eval_data = extract_embeddings(new_eval_paths)
     eval_sate = new_eval_paths
@@ -448,6 +450,7 @@ if not test_mode:
 
 # Init torch device
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+#device = torch.device('cpu')
 print('[INFO] Running on device: {}'.format(device))
 
 # Initialize the Face Detection CNN
